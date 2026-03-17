@@ -284,19 +284,27 @@
 
     .hero-slider-controls {
       display: flex;
+      align-items: center;
       gap: 10px;
       flex-shrink: 0;
     }
 
     .hero-slider-btn {
-      width: 40px;
-      height: 40px;
+      width: 42px;
+      height: 42px;
       border-radius: 12px;
-      border: 1px solid rgba(168, 198, 255, 0.14);
-      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(168, 198, 255, 0.18);
+      background: rgba(255,255,255,0.06);
       color: var(--text);
       cursor: pointer;
       font-size: 1rem;
+      display: inline-grid;
+      place-items: center;
+    }
+
+    .hero-slider-btn:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
     }
 
     .hero-slider-btn:hover {
@@ -323,6 +331,7 @@
       overflow-y: hidden;
       padding: 18px 18px 22px;
       scroll-snap-type: x mandatory;
+      scroll-behavior: smooth;
       scrollbar-width: thin;
       min-height: calc(520px - 78px);
       align-items: stretch;
@@ -945,16 +954,16 @@
     <div class="hero-slider-head">
       <div>
         <h3>Featured Repository Lanes</h3>
-        <p>Scroll horizontally to preview the main project storylines.</p>
+        <p>Use the arrows or swipe horizontally to preview the main project storylines.</p>
       </div>
       <div class="hero-slider-controls">
         <span class="pill">Hero Slider</span>
-        <button class="hero-slider-btn" type="button" id="heroPrev" aria-label="Scroll featured lanes left">&#8592;</button>
-        <button class="hero-slider-btn" type="button" id="heroNext" aria-label="Scroll featured lanes right">&#8594;</button>
+        <button class="hero-slider-btn" type="button" id="heroPrev" aria-label="Previous featured lane">&#8592;</button>
+        <button class="hero-slider-btn" type="button" id="heroNext" aria-label="Next featured lane">&#8594;</button>
       </div>
     </div>
 
-    <div class="hero-slider-track">
+    <div class="hero-slider-track" id="heroTrack">
       <article class="hero-slide">
         <div class="hero-slide-media"><span class="hero-slide-badge">Docs</span></div>
         <div class="hero-slide-body">
@@ -1760,18 +1769,37 @@
         );
       });
 
-      const heroTrack = document.querySelector(".hero-slider-track");
+      const heroTrack = document.getElementById("heroTrack");
       const heroPrev = document.getElementById("heroPrev");
       const heroNext = document.getElementById("heroNext");
 
       if (heroTrack && heroPrev && heroNext) {
-        const scrollAmount = () => Math.min(heroTrack.clientWidth * 0.9, 340);
-        heroPrev.addEventListener("click", () => {
-          heroTrack.scrollBy({ left: -scrollAmount(), behavior: "smooth" });
-        });
-        heroNext.addEventListener("click", () => {
-          heroTrack.scrollBy({ left: scrollAmount(), behavior: "smooth" });
-        });
+        const getSlides = () => Array.from(heroTrack.querySelectorAll(".hero-slide"));
+        const getStep = () => {
+          const first = heroTrack.querySelector(".hero-slide");
+          if (!first) return 320;
+          const styles = window.getComputedStyle(heroTrack);
+          const gap = parseFloat(styles.columnGap || styles.gap || 16) || 16;
+          return first.getBoundingClientRect().width + gap;
+        };
+        const maxIndex = () => Math.max(0, getSlides().length - 1);
+        const currentIndex = () => Math.round(heroTrack.scrollLeft / getStep());
+        const updateButtons = () => {
+          const idx = currentIndex();
+          heroPrev.disabled = idx <= 0;
+          heroNext.disabled = idx >= maxIndex();
+        };
+        const goToIndex = (idx) => {
+          const bounded = Math.max(0, Math.min(idx, maxIndex()));
+          heroTrack.scrollTo({ left: bounded * getStep(), behavior: "smooth" });
+          window.setTimeout(updateButtons, 260);
+        };
+
+        heroPrev.addEventListener("click", () => goToIndex(currentIndex() - 1));
+        heroNext.addEventListener("click", () => goToIndex(currentIndex() + 1));
+        heroTrack.addEventListener("scroll", updateButtons, { passive: true });
+        window.addEventListener("resize", updateButtons);
+        updateButtons();
       }
 
       const modal = document.getElementById("cardModal");
