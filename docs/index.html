@@ -730,129 +730,146 @@
       </div>
 
       <div class="hero-showcase">
-        <div class="hero-slider-shell">
+        <div class="hero-carousel-shell">
           <div class="hero-slider-head">
             <div>
               <h3>Featured Repository Lanes</h3>
-              <p>Scroll horizontally to preview the main project storylines.</p>
+              <p>Cycle through the main project storylines.</p>
             </div>
-            <span class="pill">Hero Slider</span>
+            <span class="pill">Hero Carousel</span>
           </div>
 
-          <div class="hero-slider-track">
-            <article class="hero-slide">
-              <div class="hero-slide-media">
-                <span class="hero-slide-badge">Docs</span>
-              </div>
-              <div class="hero-slide-body">
-                <div class="hero-slide-tags">
-                  <span class="pill">Scope</span>
-                  <span class="pill">Inventory</span>
-                </div>
-                <h4>Project Scope & Mission</h4>
-                <p>Overview of the lab purpose, objectives, learning outcomes, and recruiter-facing project summary.</p>
-                <ul class="hero-slide-list">
-                  <li>What the lab demonstrates</li>
-                  <li>Main goals and outcomes</li>
-                  <li>Project positioning</li>
-                </ul>
-              </div>
-            </article>
+          <div class="hero-carousel">
+            <button class="hero-carousel-btn prev" type="button" aria-label="Previous slide">‹</button>
 
-            <article class="hero-slide">
-              <div class="hero-slide-media">
-                <span class="hero-slide-badge">Architecture</span>
-              </div>
-              <div class="hero-slide-body">
-                <div class="hero-slide-tags">
-                  <span class="pill">Zones</span>
-                  <span class="pill">Topology</span>
-                </div>
-                <h4>Architecture & Network Zones</h4>
-                <p>Placeholder for topology diagrams, IP ranges, segmentation, and system relationships.</p>
-                <ul class="hero-slide-list">
-                  <li>Attacker to sensor flow</li>
-                  <li>AD and monitored hosts</li>
-                  <li>Telemetry boundaries</li>
-                </ul>
-              </div>
-            </article>
+            <div class="hero-carousel-viewport">
+              <div class="hero-carousel-track" id="heroCarouselTrack">
+                <article class="hero-slide">
+                  <div class="hero-slide-media">
+                    <span class="hero-slide-badge">Docs</span>
+                  </div>
+                  <div class="hero-slide-body">
+                    <div class="hero-slide-tags">
+                      <span class="pill">Scope</span>
+                      <span class="pill">Inventory</span>
+                    </div>
+                    <h4>Project Scope & Mission</h4>
+                    <p>Overview of the lab purpose, objectives, learning outcomes, and recruiter-facing project summary.</p>
+                    <ul class="hero-slide-list">
+                      <li>What the lab demonstrates</li>
+                      <li>Main goals and outcomes</li>
+                      <li>Project positioning</li>
+                    </ul>
+                  </div>
+                </article>
 
-            <article class="hero-slide">
-              <div class="hero-slide-media">
-                <span class="hero-slide-badge">Infrastructure</span>
-              </div>
-              <div class="hero-slide-body">
-                <div class="hero-slide-tags">
-                  <span class="pill">Windows</span>
-                  <span class="pill">Linux</span>
-                </div>
-                <h4>Infrastructure Build Sequence</h4>
-                <p>Placeholder for VM prep, Windows Server, Ubuntu, Kali, Security Onion, Wazuh, and Docker setup.</p>
-                <ul class="hero-slide-list">
-                  <li>Build order and dependencies</li>
-                  <li>Server and client preparation</li>
-                  <li>Monitoring stack deployment</li>
-                </ul>
-              </div>
-            </article>
+                <article class="hero-slide">
+                  <div class="hero-slide-media">
+                    <span class="hero-slide-badge">Architecture</span>
+                  </div>
+                  <div class="hero-slide-body">
+                    <div class="hero-slide-tags">
+                      <span class="pill">Zones</span>
+                      <span class="pill">Topology</span>
+                    </div>
+                    <h4>Architecture & Network Zones</h4>
+                    <p>Placeholder for topology diagrams, IP ranges, segmentation, and system relationships.</p>
+                    <ul class="hero-slide-list">
+                      <li>Attacker to sensor flow</li>
+                      <li>AD and monitored hosts</li>
+                      <li>Telemetry boundaries</li>
+                    </ul>
+                  </div>
+                </article>
 
-            <article class="hero-slide">
-              <div class="hero-slide-media">
-                <span class="hero-slide-badge">Detections</span>
-              </div>
-              <div class="hero-slide-body">
-                <div class="hero-slide-tags">
-                  <span class="pill">Wazuh</span>
-                  <span class="pill">Sysmon</span>
-                </div>
-                <h4>Detection Engineering</h4>
-                <p>Placeholder for Wazuh rules, Sysmon coverage, Sigma logic, and Security Onion hunts.</p>
-                <ul class="hero-slide-list">
-                  <li>Custom detection rules</li>
-                  <li>Host telemetry coverage</li>
-                  <li>ATT&amp;CK-aligned detections</li>
-                </ul>
-              </div>
-            </article>
+                <article class="hero-slide">
+                  <div class="hero-slide-media">
+                    <span class="hero-slide-badge">Infrastructure</span>
+                  </div>
+                  <div class="hero-slide-body">
+                    <div class="hero-slide-tags">
+                      <span class="pill">Windows</span>
+                      <span class="pill">Linux</span>
+                    </div>
+                    <h4>Infrastructure Build Sequence</h4>
+                    <p>Placeholder for VM prep, Windows Server, Ubuntu, Kali, Security Onion, Wazuh, and Docker setup.</p>
+                    <ul class="hero-slide-list">
+                      <li>Build order and dependencies</li>
+                      <li>Server and client preparation</li>
+                      <li>Monitoring stack deployment</li>
+                    </ul>
+                  </div>
+                </article>
 
-            <article class="hero-slide">
-              <div class="hero-slide-media">
-                <span class="hero-slide-badge">Simulations</span>
-              </div>
-              <div class="hero-slide-body">
-                <div class="hero-slide-tags">
-                  <span class="pill">Nmap</span>
-                  <span class="pill">Hydra</span>
-                </div>
-                <h4>Attack Simulations</h4>
-                <p>Placeholder for reconnaissance, brute force, lateral movement, persistence, and Linux attack stories.</p>
-                <ul class="hero-slide-list">
-                  <li>Reconnaissance and scans</li>
-                  <li>Authentication abuse</li>
-                  <li>Case-driven scenarios</li>
-                </ul>
-              </div>
-            </article>
+                <article class="hero-slide">
+                  <div class="hero-slide-media">
+                    <span class="hero-slide-badge">Detections</span>
+                  </div>
+                  <div class="hero-slide-body">
+                    <div class="hero-slide-tags">
+                      <span class="pill">Wazuh</span>
+                      <span class="pill">Sysmon</span>
+                    </div>
+                    <h4>Detection Engineering</h4>
+                    <p>Placeholder for Wazuh rules, Sysmon coverage, Sigma logic, and Security Onion hunts.</p>
+                    <ul class="hero-slide-list">
+                      <li>Custom detection rules</li>
+                      <li>Host telemetry coverage</li>
+                      <li>ATT&amp;CK-aligned detections</li>
+                    </ul>
+                  </div>
+                </article>
 
-            <article class="hero-slide">
-              <div class="hero-slide-media">
-                <span class="hero-slide-badge">Investigations</span>
+                <article class="hero-slide">
+                  <div class="hero-slide-media">
+                    <span class="hero-slide-badge">Simulations</span>
+                  </div>
+                  <div class="hero-slide-body">
+                    <div class="hero-slide-tags">
+                      <span class="pill">Nmap</span>
+                      <span class="pill">Hydra</span>
+                    </div>
+                    <h4>Attack Simulations</h4>
+                    <p>Placeholder for reconnaissance, brute force, lateral movement, persistence, and Linux attack stories.</p>
+                    <ul class="hero-slide-list">
+                      <li>Reconnaissance and scans</li>
+                      <li>Authentication abuse</li>
+                      <li>Case-driven scenarios</li>
+                    </ul>
+                  </div>
+                </article>
+
+                <article class="hero-slide">
+                  <div class="hero-slide-media">
+                    <span class="hero-slide-badge">Investigations</span>
+                  </div>
+                  <div class="hero-slide-body">
+                    <div class="hero-slide-tags">
+                      <span class="pill">Cases</span>
+                      <span class="pill">Reports</span>
+                    </div>
+                    <h4>Incident Cases & Reports</h4>
+                    <p>Placeholder for SSH brute force case, Windows logon case, PowerShell case, and final reporting output.</p>
+                    <ul class="hero-slide-list">
+                      <li>Evidence review</li>
+                      <li>MITRE mapping</li>
+                      <li>SOC-style conclusions</li>
+                    </ul>
+                  </div>
+                </article>
               </div>
-              <div class="hero-slide-body">
-                <div class="hero-slide-tags">
-                  <span class="pill">Cases</span>
-                  <span class="pill">Reports</span>
-                </div>
-                <h4>Incident Cases & Reports</h4>
-                <p>Placeholder for SSH brute force case, Windows logon case, PowerShell case, and final reporting output.</p>
-                <ul class="hero-slide-list">
-                  <li>Evidence review</li>
-                  <li>MITRE mapping</li>
-                  <li>SOC-style conclusions</li>
-                </ul>
-              </div>
-            </article>
+            </div>
+
+            <button class="hero-carousel-btn next" type="button" aria-label="Next slide">›</button>
+          </div>
+
+          <div class="hero-carousel-dots" id="heroCarouselDots">
+            <button class="is-active" type="button" aria-label="Go to slide 1"></button>
+            <button type="button" aria-label="Go to slide 2"></button>
+            <button type="button" aria-label="Go to slide 3"></button>
+            <button type="button" aria-label="Go to slide 4"></button>
+            <button type="button" aria-label="Go to slide 5"></button>
+            <button type="button" aria-label="Go to slide 6"></button>
           </div>
         </div>
       </div>
