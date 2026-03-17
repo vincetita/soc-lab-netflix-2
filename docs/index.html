@@ -1468,142 +1468,163 @@
     </div>
   </footer>
   <script>
-    (() => {
-      const modal = document.getElementById('cardModal');
-      const modalTitle = document.getElementById('modalTitle');
-      const modalDescription = document.getElementById('modalDescription');
-      const modalList = document.getElementById('modalList');
-      const modalMeta = document.getElementById('modalMeta');
-      const closeBtn = document.getElementById('modalClose');
-      const cards = document.querySelectorAll('.modal-card');
-      let lastTrigger = null;
+  (() => {
+    const modal = document.getElementById("cardModal");
+    const modalTitle = document.getElementById("modalTitle");
+    const modalDescription = document.getElementById("modalDescription");
+    const modalList = document.getElementById("modalList");
+    const modalMeta = document.getElementById("modalMeta");
+    const closeBtn = document.getElementById("modalClose");
+    const cards = document.querySelectorAll(".modal-card");
+    let lastTrigger = null;
 
-      function buildPills(labels) {
-        modalMeta.innerHTML = '';
-        labels.split(',').map(v => v.trim()).filter(Boolean).forEach(label => {
-          const pill = document.createElement('span');
-          pill.className = 'pill';
+    if (!modal || !modalTitle || !modalDescription || !modalList || !modalMeta || !closeBtn) {
+      return;
+    }
+
+    function buildPills(labels) {
+      modalMeta.innerHTML = "";
+      labels
+        .split(",")
+        .map(v => v.trim())
+        .filter(Boolean)
+        .forEach(label => {
+          const pill = document.createElement("span");
+          pill.className = "pill";
           pill.textContent = label;
           modalMeta.appendChild(pill);
         });
-      }
+    }
 
-      function buildList(details) {
-        modalList.innerHTML = '';
-        details.split('|').map(v => v.trim()).filter(Boolean).forEach(item => {
-          const li = document.createElement('li');
+    function buildList(details) {
+      modalList.innerHTML = "";
+      details
+        .split("|")
+        .map(v => v.trim())
+        .filter(Boolean)
+        .forEach(item => {
+          const li = document.createElement("li");
           li.textContent = item;
           modalList.appendChild(li);
         });
-      }
+    }
 
-      function openModal(card) {
-        lastTrigger = card;
-        modalTitle.textContent = card.dataset.title || 'Details';
-        modalDescription.textContent = card.dataset.description || '';
-        buildPills(card.dataset.labels || '');
-        buildList(card.dataset.details || '');
-        modal.classList.add('is-open');
-        modal.setAttribute('aria-hidden', 'false');
-        document.body.style.overflow = 'hidden';
-        closeBtn.focus();
-      }
+    function openModal(card) {
+      lastTrigger = card;
+      modalTitle.textContent = card.dataset.title || "Details";
+      modalDescription.textContent = card.dataset.description || "";
+      buildPills(card.dataset.labels || "");
+      buildList(card.dataset.details || "");
+      modal.classList.add("is-open");
+      modal.setAttribute("aria-hidden", "false");
+      document.body.style.overflow = "hidden";
+      closeBtn.focus();
+    }
 
-      function closeModal() {
-        modal.classList.remove('is-open');
-        modal.setAttribute('aria-hidden', 'true');
-        document.body.style.overflow = '';
-        if (lastTrigger) lastTrigger.focus();
-      }
+    function closeModal() {
+      modal.classList.remove("is-open");
+      modal.setAttribute("aria-hidden", "true");
+      document.body.style.overflow = "";
+      if (lastTrigger) lastTrigger.focus();
+    }
 
-      cards.forEach(card => {
-        card.addEventListener('click', () => openModal(card));
-        card.addEventListener('keydown', event => {
-          if (event.key === 'Enter' || event.key === ' ') {
-            event.preventDefault();
-            openModal(card);
-          }
-        });
-      });
-
-      modal.addEventListener('click', event => {
-        if (event.target.dataset.close === 'true') closeModal();
-      });
-
-      closeBtn.addEventListener('click', closeModal);
-
-      document.addEventListener('keydown', event => {
-        if (event.key === 'Escape' && modal.classList.contains('is-open')) {
-          closeModal();
+    cards.forEach(card => {
+      card.addEventListener("click", () => openModal(card));
+      card.addEventListener("keydown", event => {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          openModal(card);
         }
       });
-    })();
-	
-	// ================= HERO CAROUSEL =================
-document.addEventListener("DOMContentLoaded", () => {
-  const track = document.getElementById("heroCarouselTrack");
-  const dotsWrap = document.getElementById("heroCarouselDots");
-  const slides = track ? Array.from(track.children) : [];
-  const dots = dotsWrap ? Array.from(dotsWrap.children) : [];
-  const prevBtn = document.querySelector(".hero-carousel-btn.prev");
-  const nextBtn = document.querySelector(".hero-carousel-btn.next");
-
-  if (!track || !slides.length) return;
-
-  let currentIndex = 0;
-  let autoRotate;
-
-  function updateCarousel(index) {
-    currentIndex = (index + slides.length) % slides.length;
-    track.style.transform = `translateX(-${currentIndex * 100}%)`;
-
-    dots.forEach((dot, i) => {
-      dot.classList.toggle("is-active", i === currentIndex);
     });
-  }
 
-  function nextSlide() {
-    updateCarousel(currentIndex + 1);
-  }
+    modal.addEventListener("click", event => {
+      if (event.target.dataset.close === "true") {
+        closeModal();
+      }
+    });
 
-  function prevSlide() {
-    updateCarousel(currentIndex - 1);
-  }
+    closeBtn.addEventListener("click", closeModal);
 
-  function startAutoRotate() {
-    stopAutoRotate();
-    autoRotate = setInterval(nextSlide, 5000);
-  }
+    document.addEventListener("keydown", event => {
+      if (event.key === "Escape" && modal.classList.contains("is-open")) {
+        closeModal();
+      }
+    });
+  })();
 
-  function stopAutoRotate() {
-    if (autoRotate) clearInterval(autoRotate);
-  }
+  document.addEventListener("DOMContentLoaded", () => {
+    const track = document.getElementById("heroCarouselTrack");
+    const dotsWrap = document.getElementById("heroCarouselDots");
+    const slides = track ? Array.from(track.children) : [];
+    const dots = dotsWrap ? Array.from(dotsWrap.children) : [];
+    const prevBtn = document.querySelector(".hero-carousel-btn.prev");
+    const nextBtn = document.querySelector(".hero-carousel-btn.next");
+    const shell = document.querySelector(".hero-carousel-shell");
 
-  nextBtn?.addEventListener("click", () => {
-    nextSlide();
+    if (!track || !slides.length) return;
+
+    let currentIndex = 0;
+    let autoRotate = null;
+
+    function updateCarousel(index) {
+      currentIndex = (index + slides.length) % slides.length;
+      track.style.transform = `translateX(-${currentIndex * 100}%)`;
+
+      dots.forEach((dot, i) => {
+        dot.classList.toggle("is-active", i === currentIndex);
+      });
+    }
+
+    function nextSlide() {
+      updateCarousel(currentIndex + 1);
+    }
+
+    function prevSlide() {
+      updateCarousel(currentIndex - 1);
+    }
+
+    function startAutoRotate() {
+      stopAutoRotate();
+      autoRotate = setInterval(nextSlide, 5000);
+    }
+
+    function stopAutoRotate() {
+      if (autoRotate) {
+        clearInterval(autoRotate);
+        autoRotate = null;
+      }
+    }
+
+    if (nextBtn) {
+      nextBtn.addEventListener("click", () => {
+        nextSlide();
+        startAutoRotate();
+      });
+    }
+
+    if (prevBtn) {
+      prevBtn.addEventListener("click", () => {
+        prevSlide();
+        startAutoRotate();
+      });
+    }
+
+    dots.forEach((dot, index) => {
+      dot.addEventListener("click", () => {
+        updateCarousel(index);
+        startAutoRotate();
+      });
+    });
+
+    if (shell) {
+      shell.addEventListener("mouseenter", stopAutoRotate);
+      shell.addEventListener("mouseleave", startAutoRotate);
+    }
+
+    updateCarousel(0);
     startAutoRotate();
   });
-
-  prevBtn?.addEventListener("click", () => {
-    prevSlide();
-    startAutoRotate();
-  });
-
-  dots.forEach((dot, index) => {
-    dot.addEventListener("click", () => {
-      updateCarousel(index);
-      startAutoRotate();
-    });
-  });
-
-  const shell = document.querySelector(".hero-carousel-shell");
-  shell?.addEventListener("mouseenter", stopAutoRotate);
-  shell?.addEventListener("mouseleave", startAutoRotate);
-
-  updateCarousel(0);
-  startAutoRotate();
-});
-	
-  </script>
+</script>
 </body>
 </html>
