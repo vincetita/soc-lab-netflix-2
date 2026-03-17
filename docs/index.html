@@ -506,6 +506,179 @@
       .highlight-grid, .gallery { grid-template-columns: 1fr; }
       .scroller { grid-auto-columns: minmax(260px, 86vw); }
     }
+	
+  .hero-inner {
+  display: grid;
+  grid-template-columns: minmax(0, 0.95fr) minmax(340px, 0.85fr);
+  gap: 34px;
+  align-items: stretch;
+  position: relative;
+  z-index: 2;
+}
+
+.hero-showcase {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  padding: 88px 0 90px;
+}
+
+.hero-slider-shell {
+  width: 100%;
+  min-height: 520px;
+  border-radius: 30px;
+  border: 1px solid rgba(163, 198, 255, 0.14);
+  background:
+    linear-gradient(180deg, rgba(15, 27, 48, 0.74), rgba(9, 16, 28, 0.92)),
+    radial-gradient(circle at 50% 22%, rgba(124, 172, 255, 0.16), transparent 24%),
+    rgba(255,255,255,0.02);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+  backdrop-filter: blur(12px);
+}
+
+.hero-slider-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 18px 20px;
+  border-bottom: 1px solid rgba(168, 198, 255, 0.1);
+  background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
+}
+
+.hero-slider-head h3 {
+  margin: 0;
+  font-size: 1.02rem;
+  letter-spacing: -0.02em;
+}
+
+.hero-slider-head p {
+  margin: 4px 0 0;
+  font-size: 0.84rem;
+  color: var(--muted);
+  line-height: 1.45;
+}
+
+.hero-slider-track {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(260px, 320px);
+  gap: 16px;
+  overflow-x: auto;
+  padding: 18px 18px 22px;
+  scroll-snap-type: x proximity;
+  scrollbar-width: thin;
+  min-height: calc(520px - 78px);
+  align-content: start;
+}
+
+.hero-slider-track::-webkit-scrollbar {
+  height: 10px;
+}
+
+.hero-slider-track::-webkit-scrollbar-thumb {
+  background: rgba(153, 190, 255, 0.16);
+  border-radius: 999px;
+}
+
+.hero-slide {
+  scroll-snap-align: start;
+  min-height: 420px;
+  border-radius: 24px;
+  border: 1px solid rgba(168, 198, 255, 0.12);
+  background:
+    linear-gradient(180deg, rgba(17, 28, 48, 0.78), rgba(9, 16, 28, 0.96)),
+    radial-gradient(circle at top left, rgba(94, 140, 228, 0.18), transparent 34%);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.hero-slide-media {
+  height: 170px;
+  position: relative;
+  background:
+    linear-gradient(180deg, rgba(6, 10, 18, 0.08), rgba(6, 10, 18, 0.48)),
+    radial-gradient(circle at 50% 18%, rgba(124, 172, 255, 0.24), transparent 26%),
+    linear-gradient(135deg, #16223a, #0b1220);
+}
+
+.hero-slide-media::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+  background-size: 24px 24px;
+  opacity: 0.28;
+}
+
+.hero-slide-badge {
+  position: absolute;
+  left: 16px;
+  top: 16px;
+  z-index: 2;
+  padding: 8px 12px;
+  border-radius: 999px;
+  font-size: 0.76rem;
+  color: var(--accent-2);
+  background: rgba(118, 167, 255, 0.1);
+  border: 1px solid rgba(168, 198, 255, 0.14);
+}
+
+.hero-slide-body {
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  flex: 1;
+}
+
+.hero-slide-body h4 {
+  margin: 0;
+  font-size: 1.18rem;
+  letter-spacing: -0.02em;
+}
+
+.hero-slide-body p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.65;
+  font-size: 0.95rem;
+}
+
+.hero-slide-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.hero-slide-list {
+  margin: 0;
+  padding-left: 18px;
+  color: var(--muted);
+  line-height: 1.65;
+  font-size: 0.92rem;
+}
+
+@media (max-width: 1100px) {
+  .hero-inner {
+    grid-template-columns: 1fr;
+  }
+
+  .hero-showcase {
+    padding-top: 0;
+  }
+
+  .hero-slider-shell {
+    min-height: 0;
+  }
+}	
+	
   </style>
 </head>
 <body>
@@ -550,6 +723,135 @@
           <div><strong>Berlin</strong>junior SOC target roles</div>
         </div>
       </div>
+	  
+	  <div class="hero-showcase">
+  <div class="hero-slider-shell">
+    <div class="hero-slider-head">
+      <div>
+        <h3>Featured Repository Lanes</h3>
+        <p>Scroll horizontally to preview the main project storylines.</p>
+      </div>
+      <span class="pill">Hero Slider</span>
+    </div>
+
+    <div class="hero-slider-track">
+      <article class="hero-slide">
+        <div class="hero-slide-media">
+          <span class="hero-slide-badge">Docs</span>
+        </div>
+        <div class="hero-slide-body">
+          <div class="hero-slide-tags">
+            <span class="pill">Scope</span>
+            <span class="pill">Inventory</span>
+          </div>
+          <h4>Project Scope & Mission</h4>
+          <p>Overview of the lab purpose, objectives, learning outcomes, and recruiter-facing project summary.</p>
+          <ul class="hero-slide-list">
+            <li>What the lab demonstrates</li>
+            <li>Main goals and outcomes</li>
+            <li>Project positioning</li>
+          </ul>
+        </div>
+      </article>
+
+      <article class="hero-slide">
+        <div class="hero-slide-media">
+          <span class="hero-slide-badge">Architecture</span>
+        </div>
+        <div class="hero-slide-body">
+          <div class="hero-slide-tags">
+            <span class="pill">Zones</span>
+            <span class="pill">Topology</span>
+          </div>
+          <h4>Architecture & Network Zones</h4>
+          <p>Placeholder for topology diagrams, IP ranges, segmentation, and system relationships.</p>
+          <ul class="hero-slide-list">
+            <li>Attacker to sensor flow</li>
+            <li>AD and monitored hosts</li>
+            <li>Telemetry boundaries</li>
+          </ul>
+        </div>
+      </article>
+
+      <article class="hero-slide">
+        <div class="hero-slide-media">
+          <span class="hero-slide-badge">Infrastructure</span>
+        </div>
+        <div class="hero-slide-body">
+          <div class="hero-slide-tags">
+            <span class="pill">Windows</span>
+            <span class="pill">Linux</span>
+          </div>
+          <h4>Infrastructure Build Sequence</h4>
+          <p>Placeholder for VM prep, Windows Server, Ubuntu, Kali, Security Onion, Wazuh, and Docker setup.</p>
+          <ul class="hero-slide-list">
+            <li>Build order and dependencies</li>
+            <li>Server and client preparation</li>
+            <li>Monitoring stack deployment</li>
+          </ul>
+        </div>
+      </article>
+
+      <article class="hero-slide">
+        <div class="hero-slide-media">
+          <span class="hero-slide-badge">Detections</span>
+        </div>
+        <div class="hero-slide-body">
+          <div class="hero-slide-tags">
+            <span class="pill">Wazuh</span>
+            <span class="pill">Sysmon</span>
+          </div>
+          <h4>Detection Engineering</h4>
+          <p>Placeholder for Wazuh rules, Sysmon coverage, Sigma logic, and Security Onion hunts.</p>
+          <ul class="hero-slide-list">
+            <li>Custom detection rules</li>
+            <li>Host telemetry coverage</li>
+            <li>ATT&amp;CK-aligned detections</li>
+          </ul>
+        </div>
+      </article>
+
+      <article class="hero-slide">
+        <div class="hero-slide-media">
+          <span class="hero-slide-badge">Simulations</span>
+        </div>
+        <div class="hero-slide-body">
+          <div class="hero-slide-tags">
+            <span class="pill">Nmap</span>
+            <span class="pill">Hydra</span>
+          </div>
+          <h4>Attack Simulations</h4>
+          <p>Placeholder for reconnaissance, brute force, lateral movement, persistence, and Linux attack stories.</p>
+          <ul class="hero-slide-list">
+            <li>Reconnaissance and scans</li>
+            <li>Authentication abuse</li>
+            <li>Case-driven scenarios</li>
+          </ul>
+        </div>
+      </article>
+
+      <article class="hero-slide">
+        <div class="hero-slide-media">
+          <span class="hero-slide-badge">Investigations</span>
+        </div>
+        <div class="hero-slide-body">
+          <div class="hero-slide-tags">
+            <span class="pill">Cases</span>
+            <span class="pill">Reports</span>
+          </div>
+          <h4>Incident Cases & Reports</h4>
+          <p>Placeholder for SSH brute force case, Windows logon case, PowerShell case, and final reporting output.</p>
+          <ul class="hero-slide-list">
+            <li>Evidence review</li>
+            <li>MITRE mapping</li>
+            <li>SOC-style conclusions</li>
+          </ul>
+        </div>
+      </article>
+    </div>
+  </div>
+</div>
+	  
     </div>
   </header>
 
