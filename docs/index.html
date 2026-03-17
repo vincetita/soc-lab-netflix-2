@@ -1795,11 +1795,49 @@
           window.setTimeout(updateButtons, 260);
         };
 
-        heroPrev.addEventListener("click", () => goToIndex(currentIndex() - 1));
-        heroNext.addEventListener("click", () => goToIndex(currentIndex() + 1));
+        let autoTimer = null;
+        let isPaused = false;
+        const intervalMs = 3500;
+
+        const stopAutoCycle = () => {
+          if (autoTimer) {
+            window.clearInterval(autoTimer);
+            autoTimer = null;
+          }
+        };
+
+        const startAutoCycle = () => {
+          stopAutoCycle();
+          autoTimer = window.setInterval(() => {
+            if (isPaused) return;
+            const idx = currentIndex();
+            const nextIdx = idx >= maxIndex() ? 0 : idx + 1;
+            goToIndex(nextIdx);
+          }, intervalMs);
+        };
+
+        heroPrev.addEventListener("click", () => {
+          goToIndex(currentIndex() - 1);
+          startAutoCycle();
+        });
+        heroNext.addEventListener("click", () => {
+          goToIndex(currentIndex() + 1);
+          startAutoCycle();
+        });
+
+        heroTrack.addEventListener("mouseenter", () => { isPaused = true; });
+        heroTrack.addEventListener("mouseleave", () => { isPaused = false; });
+        heroTrack.addEventListener("focusin", () => { isPaused = true; });
+        heroTrack.addEventListener("focusout", () => { isPaused = false; });
+        heroPrev.addEventListener("mouseenter", () => { isPaused = true; });
+        heroPrev.addEventListener("mouseleave", () => { isPaused = false; });
+        heroNext.addEventListener("mouseenter", () => { isPaused = true; });
+        heroNext.addEventListener("mouseleave", () => { isPaused = false; });
+
         heroTrack.addEventListener("scroll", updateButtons, { passive: true });
         window.addEventListener("resize", updateButtons);
         updateButtons();
+        startAutoCycle();
       }
 
       const modal = document.getElementById("cardModal");
